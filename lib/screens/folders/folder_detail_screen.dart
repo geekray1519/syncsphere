@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncsphere/models/sync_job.dart';
@@ -6,6 +7,8 @@ import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/theme/app_spacing.dart';
 import 'package:syncsphere/models/sync_result.dart';
 import '../../l10n/app_localizations.dart';
+
+const bool _disableAnimationsForTest = bool.fromEnvironment('FLUTTER_TEST');
 
 /// Folder detail — individual folder settings and sync info.
 class FolderDetailScreen extends StatelessWidget {
@@ -131,7 +134,7 @@ class FolderDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 100.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
             const SizedBox(height: AppSpacing.lg),
 
             // Paths section
@@ -155,7 +158,7 @@ class FolderDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
             const SizedBox(height: AppSpacing.lg),
 
             // Versioning section
@@ -166,7 +169,7 @@ class FolderDetailScreen extends StatelessWidget {
                 label: l10n.type,
                 value: _getVersioningTypeString(currentJob.versioningType, l10n),
               ),
-            ),
+            ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 300.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
             const SizedBox(height: AppSpacing.lg),
 
             // Last Sync Result
@@ -195,7 +198,7 @@ class FolderDetailScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 400.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
 
             const SizedBox(height: AppSpacing.xxxl),
           ],
@@ -232,7 +235,7 @@ class FolderDetailScreen extends StatelessWidget {
                 ),
               ),
             ],
-          ),
+          ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
         ),
       ),
     );

@@ -49,12 +49,13 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     await tester.tap(find.byIcon(Icons.folder_outlined));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
     expect(find.text('フォルダ'), findsWidgets);
 
     await tester.tap(find.byIcon(Icons.dashboard_outlined));
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('フォルダを追加して同期を始めましょう'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -99,11 +100,12 @@ void main() {
     expect(find.text('維持されるジョブ'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.folder_outlined));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
     await tester.tap(find.byIcon(Icons.dashboard_outlined));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.text('維持されるジョブ'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

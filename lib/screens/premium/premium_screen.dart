@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../providers/premium_provider.dart';
 import '../../theme/app_spacing.dart';
+
+const bool _disableAnimationsForTest = bool.fromEnvironment('FLUTTER_TEST');
 
 class PremiumScreen extends StatelessWidget {
   const PremiumScreen({super.key});
@@ -53,7 +56,7 @@ class PremiumScreen extends StatelessWidget {
                 size: 80,
                 color: colorScheme.primary,
               ),
-            ),
+            ).animate(autoPlay: !_disableAnimationsForTest).scale(duration: 400.ms, curve: Curves.easeOutBack),
             const SizedBox(height: AppSpacing.xl),
             Text(
               l10n.premiumActive,
@@ -89,7 +92,7 @@ class PremiumScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
+            ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
           ],
         ),
       ),
@@ -125,7 +128,7 @@ class PremiumScreen extends StatelessWidget {
               Icons.workspace_premium_rounded,
               size: 80,
               color: colorScheme.primary,
-            ),
+            ).animate(autoPlay: !_disableAnimationsForTest).scale(duration: 400.ms, curve: Curves.easeOutBack),
             const SizedBox(height: AppSpacing.md),
             Text(
               l10n.premiumTitle,
@@ -137,9 +140,19 @@ class PremiumScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.xxl),
             Row(
               children: [
-                Expanded(child: _buildFreePlanCard(theme, colorScheme, l10n)),
+                Expanded(
+                      child: _buildFreePlanCard(theme, colorScheme, l10n)
+                      .animate(autoPlay: !_disableAnimationsForTest)
+                      .fadeIn(delay: 200.ms, duration: 400.ms)
+                      .slideY(begin: 0.1, duration: 400.ms),
+                ),
                 const SizedBox(width: AppSpacing.md),
-                Expanded(child: _buildPremiumPlanCard(theme, colorScheme, l10n)),
+                Expanded(
+                      child: _buildPremiumPlanCard(theme, colorScheme, l10n)
+                      .animate(autoPlay: !_disableAnimationsForTest)
+                      .fadeIn(delay: 300.ms, duration: 400.ms)
+                      .slideY(begin: 0.1, duration: 400.ms),
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.xxl),
@@ -172,7 +185,7 @@ class PremiumScreen extends StatelessWidget {
               child: provider.isPurchasePending
                   ? const CircularProgressIndicator()
                   : Text(l10n.purchasePremium),
-            ),
+            ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 400.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
             const SizedBox(height: AppSpacing.md),
             TextButton(
               onPressed: provider.isPurchasePending ? null : () => provider.restorePurchases(),

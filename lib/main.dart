@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/services/notification_service.dart';
 import 'providers/sync_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/run_conditions_provider.dart';
@@ -13,6 +14,7 @@ import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().initialize();
 
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final SettingsProvider settingsProvider = SettingsProvider(preferences);

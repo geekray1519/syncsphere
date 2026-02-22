@@ -23,6 +23,7 @@ void main() {
     expect(find.text('フォルダ'), findsOneWidget);
     expect(find.text('フォルダがありません'), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('renders sync job cards when folders exist', (
@@ -43,6 +44,7 @@ void main() {
     expect(find.byType(SyncJobCard), findsNWidgets(2));
     expect(find.text('テスト同期ジョブ'), findsOneWidget);
     expect(find.text('追加ジョブ'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('supports tapping in empty state without crashing', (
@@ -52,9 +54,10 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     await tester.tap(find.text('フォルダがありません'));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(FloatingActionButton), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('list scrolls with many folder jobs', (WidgetTester tester) async {
@@ -78,6 +81,7 @@ void main() {
     );
 
     expect(find.text('ジョブ 11'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('updates from empty to populated when provider changes', (
@@ -91,9 +95,10 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     providers.syncProvider.addJob(createTestSyncJob(name: '追加されたジョブ'));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.text('追加されたジョブ'), findsOneWidget);
     expect(find.text('フォルダがありません'), findsNothing);
+    await tester.pump(const Duration(seconds: 1));
   });
 }

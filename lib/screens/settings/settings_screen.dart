@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -14,6 +15,8 @@ import '../../providers/settings_provider.dart';
 import '../../providers/premium_provider.dart';
 import '../../theme/app_spacing.dart';
 import '../../l10n/app_localizations.dart';
+
+const bool _disableAnimationsForTest = bool.fromEnvironment('FLUTTER_TEST');
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -66,7 +69,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 100.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
@@ -135,7 +138,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
@@ -195,7 +198,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 300.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
@@ -229,7 +232,7 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 400.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
@@ -259,7 +262,7 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 500.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
@@ -277,7 +280,7 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => _importConfig(context, settings, l10n),
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 500.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
@@ -319,7 +322,7 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 500.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
@@ -347,7 +350,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 500.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               const Gap(AppSpacing.xxxl),
             ],
           );

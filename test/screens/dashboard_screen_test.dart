@@ -26,6 +26,7 @@ void main() {
     expect(find.text('デバイス'), findsOneWidget);
     expect(find.text('同期中'), findsOneWidget);
     expect(find.text('フォルダを追加して同期を始めましょう'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('shows recent jobs and limits list to five cards', (
@@ -54,6 +55,7 @@ void main() {
     expect(find.byType(SyncJobCard), findsNWidgets(5));
     expect(find.text('ジョブ 0'), findsOneWidget);
     expect(find.text('ジョブ 5'), findsNothing);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('add-device action chip is tappable', (WidgetTester tester) async {
@@ -61,9 +63,10 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     await tester.tap(find.text('デバイス追加'));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.text('デバイス追加'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('scrolls dashboard content with several jobs', (
@@ -92,6 +95,7 @@ void main() {
     );
 
     expect(find.text('ジョブ 4'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('updates from empty state when provider changes', (
@@ -105,9 +109,10 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     providers.syncProvider.addJob(createTestSyncJob(name: '動的ジョブ'));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.text('動的ジョブ'), findsOneWidget);
     expect(find.text('フォルダを追加して同期を始めましょう'), findsNothing);
+    await tester.pump(const Duration(seconds: 1));
   });
 }

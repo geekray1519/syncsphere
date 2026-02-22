@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:syncsphere/models/sync_job.dart';
 import 'package:syncsphere/providers/device_provider.dart';
@@ -10,6 +11,8 @@ import 'package:syncsphere/widgets/sync_job_card.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../shell/app_shell.dart';
+
+const bool _disableAnimationsForTest = bool.fromEnvironment('FLUTTER_TEST');
 
 /// Dashboard — main overview screen (tab 0 in AppShell).
 class DashboardScreen extends StatelessWidget {
@@ -66,7 +69,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
+                ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
                 const SizedBox(height: AppSpacing.xl),
 
                 // Quick action buttons row
@@ -90,7 +93,7 @@ class DashboardScreen extends StatelessWidget {
                       onPressed: () => AppShellController.of(context)?.switchToTab(2),
                     ),
                   ],
-                ),
+                ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
                 const SizedBox(height: AppSpacing.xl),
 
                 // Recent sync jobs list
@@ -110,7 +113,9 @@ class DashboardScreen extends StatelessWidget {
                     onAction: () => Navigator.pushNamed(context, '/wizard'),
                   )
                 else
-                  ...syncProvider.jobs.take(5).map((SyncJob job) {
+                  ...syncProvider.jobs.take(5).toList().asMap().entries.map((entry) {
+                    final int index = entry.key;
+                    final SyncJob job = entry.value;
                     return SyncJobCard(
                       job: job,
                       onTap: () => Navigator.pushNamed(
@@ -118,7 +123,7 @@ class DashboardScreen extends StatelessWidget {
                         '/folder-detail',
                         arguments: job,
                       ),
-                    );
+                    ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: (100 * index).ms).slideY(begin: 0.1);
                   }),
               ],
             ),

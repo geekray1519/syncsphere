@@ -55,6 +55,7 @@ dependencies:
   permission_handler: ^11.3.1
   
   # Utils
+  flutter_local_notifications: ^18.0.1
   uuid: ^4.5.1
   collection: ^1.19.1
   async: ^2.12.0

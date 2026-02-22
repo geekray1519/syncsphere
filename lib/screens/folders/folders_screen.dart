@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:syncsphere/models/sync_job.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
@@ -6,6 +7,8 @@ import 'package:syncsphere/theme/app_spacing.dart';
 import 'package:syncsphere/widgets/empty_state_widget.dart';
 import 'package:syncsphere/widgets/sync_job_card.dart';
 import '../../l10n/app_localizations.dart';
+
+const bool _disableAnimationsForTest = bool.fromEnvironment('FLUTTER_TEST');
 
 /// Folders list — sync folder management (tab 1 in AppShell).
 class FoldersScreen extends StatelessWidget {
@@ -34,7 +37,7 @@ class FoldersScreen extends StatelessWidget {
                     icon: Icons.folder_open_rounded,
                     title: l10n.noFoldersTitle,
                     description: l10n.noFoldersAction,
-                  ),
+                  ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.2),
                 ),
               )
             : ListView.builder(
@@ -51,7 +54,7 @@ class FoldersScreen extends StatelessWidget {
                         arguments: job,
                       );
                     },
-                  );
+                  ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: (100 * index).ms).slideY(begin: 0.1);
                 },
               ),
       ),

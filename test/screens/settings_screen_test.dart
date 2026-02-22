@@ -26,6 +26,7 @@ void main() {
     expect(find.text('一般'), findsOneWidget);
     expect(find.text('同期'), findsOneWidget);
     expect(find.text('実行条件'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('scrolls down to app info section', (WidgetTester tester) async {
@@ -41,6 +42,7 @@ void main() {
 
     expect(find.text('このアプリについて'), findsOneWidget);
     expect(find.text('バージョン'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('toggles WiFi-only switch on tap', (WidgetTester tester) async {
@@ -59,10 +61,11 @@ void main() {
     expect(beforeSwitch.value, isTrue);
 
     await tester.tap(find.text('WiFiのみで同期'));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     final Switch afterSwitch = tester.widget<Switch>(wifiSwitchFinder);
     expect(afterSwitch.value, isFalse);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('sync completion notification switch updates provider state', (
@@ -87,9 +90,10 @@ void main() {
 
     final SwitchListTile tile = tester.widget<SwitchListTile>(notificationTile);
     tile.onChanged?.call(false);
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(providers.settingsProvider.notificationsEnabled, isFalse);
+    await tester.pump(const Duration(seconds: 1));
   });
 
   testWidgets('removes an allowed SSID chip via delete tap', (
@@ -116,8 +120,9 @@ void main() {
     );
     await tester.ensureVisible(deleteIcon);
     await tester.tap(deleteIcon);
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.text('MyHomeNetwork'), findsNothing);
+    await tester.pump(const Duration(seconds: 1));
   });
 }
