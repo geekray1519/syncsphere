@@ -1,0 +1,277 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/premium_provider.dart';
+import '../../theme/app_spacing.dart';
+
+class PremiumScreen extends StatelessWidget {
+  const PremiumScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final premiumProvider = context.watch<PremiumProvider>();
+
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('プレミアム'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: SafeArea(
+        child: premiumProvider.isPremium
+            ? _buildSuccessState(theme, colorScheme)
+            : _buildPurchaseState(premiumProvider, theme, colorScheme),
+      ),
+    );
+  }
+
+  Widget _buildSuccessState(ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: ListView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.pagePadding,
+            vertical: AppSpacing.xxl,
+          ),
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.xxl),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colorScheme.primaryContainer,
+              ),
+              child: Icon(
+                Icons.check_circle_rounded,
+                size: 80,
+                color: colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            Text(
+              'プレミアム会員です',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'SyncSphereをご支援いただきありがとうございます！',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            Card(
+              color: colorScheme.surfaceContainer,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  children: [
+                    _buildBenefitItem(Icons.block_rounded, '広告の完全非表示', theme, colorScheme),
+                    const Divider(height: AppSpacing.xl),
+                    _buildBenefitItem(Icons.speed_rounded, '無制限の同期速度', theme, colorScheme),
+                    const Divider(height: AppSpacing.xl),
+                    _buildBenefitItem(Icons.support_agent_rounded, '優先サポート', theme, colorScheme),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBenefitItem(IconData icon, String text, ThemeData theme, ColorScheme colorScheme) {
+    return Row(
+      children: [
+        Icon(icon, color: colorScheme.primary, size: AppSpacing.iconMd),
+        const SizedBox(width: AppSpacing.md),
+        Text(
+          text,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPurchaseState(PremiumProvider provider, ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: ListView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.pagePadding,
+            vertical: AppSpacing.xl,
+          ),
+          children: [
+            Icon(
+              Icons.workspace_premium_rounded,
+              size: 80,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'SyncSphere プレミアム',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            Row(
+              children: [
+                Expanded(child: _buildFreePlanCard(theme, colorScheme)),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(child: _buildPremiumPlanCard(theme, colorScheme)),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            Text(
+              provider.premiumProduct?.price ?? '¥3,000 (USD \$20.00)',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              '一回限りの購入 — サブスクリプションなし',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            ElevatedButton(
+              onPressed: provider.isPurchasePending ? null : () => provider.purchasePremium(),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                ),
+              ),
+              child: provider.isPurchasePending
+                  ? const CircularProgressIndicator()
+                  : const Text('プレミアムを購入'),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextButton(
+              onPressed: provider.isPurchasePending ? null : () => provider.restorePurchases(),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              ),
+              child: const Text('購入を復元'),
+            ),
+            if (provider.errorMessage != null) ...[
+              const SizedBox(height: AppSpacing.lg),
+              Text(
+                provider.errorMessage!,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.error,
+                ),
+              ),
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFreePlanCard(ThemeData theme, ColorScheme colorScheme) {
+    return Card(
+      color: colorScheme.surfaceContainerHighest,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          children: [
+            Text(
+              '無料プラン',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            _buildFeatureRow(Icons.check_rounded, '基本同期', colorScheme.onSurfaceVariant),
+            const SizedBox(height: AppSpacing.md),
+            _buildFeatureRow(Icons.close_rounded, '広告なし', colorScheme.onSurfaceVariant),
+            const SizedBox(height: AppSpacing.md),
+            _buildFeatureRow(Icons.close_rounded, '高速同期', colorScheme.onSurfaceVariant),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPremiumPlanCard(ThemeData theme, ColorScheme colorScheme) {
+    return Card(
+      color: colorScheme.primaryContainer,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+        side: BorderSide(color: colorScheme.primary, width: 2),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          children: [
+            Text(
+              'プレミアムプラン',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            _buildFeatureRow(Icons.check_rounded, '基本同期', colorScheme.onPrimaryContainer),
+            const SizedBox(height: AppSpacing.md),
+            _buildFeatureRow(Icons.check_rounded, '広告なし', colorScheme.onPrimaryContainer),
+            const SizedBox(height: AppSpacing.md),
+            _buildFeatureRow(Icons.check_rounded, '高速同期', colorScheme.onPrimaryContainer),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureRow(IconData icon, String text, Color color) {
+    return Row(
+      children: [
+        Icon(icon, size: AppSpacing.iconSm, color: color),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

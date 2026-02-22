@@ -1,0 +1,415 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/sync_job.dart';
+import '../../providers/sync_provider.dart';
+import '../../theme/app_spacing.dart';
+
+class SyncDetailScreen extends StatelessWidget {
+  const SyncDetailScreen({super.key, required this.job});
+
+  final SyncJob job;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final syncProvider = context.watch<SyncProvider>();
+    final isSyncing = job.isActive;
+    final isComparing = syncProvider.isComparing(job.id);
+    final lastResult = syncProvider.history.cast<dynamic>().firstWhere((r) => r.jobId == job.id, orElse: () => null) as dynamic;
+
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        title: Text(job.name),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              // Action logic handled elsewhere
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'edit',
+                child: Row(
+                  children: [
+                    Icon(Icons.edit_rounded, size: 20),
+                    SizedBox(width: 8),
+                    Text('編集'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'rescan',
+                child: Row(
+                  children: [
+                    Icon(Icons.refresh_rounded, size: 20),
+                    SizedBox(width: 8),
+                    Text('強制再スキャン'),
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    Icon(Icons.delete_rounded, size: 20, color: colorScheme.error),
+                    const SizedBox(width: 8),
+                    Text('削除', style: TextStyle(color: colorScheme.error)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(AppSpacing.pagePadding),
+                children: [
+                  _buildSummaryCard(theme, colorScheme),
+                  const SizedBox(height: AppSpacing.lg),
+                  _buildFoldersCard(theme, colorScheme),
+                  const SizedBox(height: AppSpacing.lg),
+                  _buildFilterCard(theme, colorScheme),
+                  if (lastResult != null) ...[
+                    const SizedBox(height: AppSpacing.lg),
+                    _buildLastSyncResultCard(lastResult, theme, colorScheme),
+                  ],
+                ],
+              ),
+            ),
+            _buildBottomActionBar(isSyncing, isComparing, syncProvider, theme, colorScheme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard(ThemeData theme, ColorScheme colorScheme) {
+    return Card(
+      color: colorScheme.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '概要',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            _buildDetailRow(Icons.sync_alt_rounded, '同期モード', job.syncMode.name, theme, colorScheme),
+            const SizedBox(height: AppSpacing.sm),
+            _buildDetailRow(Icons.compare_arrows_rounded, '比較モード', job.compareMode.name, theme, colorScheme),
+            const SizedBox(height: AppSpacing.sm),
+            _buildDetailRow(Icons.history_rounded, 'バージョン管理', job.versioningType.name, theme, colorScheme),
+            const SizedBox(height: AppSpacing.md),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+                decoration: BoxDecoration(
+                  color: job.isActive ? colorScheme.primaryContainer : colorScheme.surface,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                  border: Border.all(
+                    color: job.isActive ? colorScheme.primary : colorScheme.outlineVariant,
+                  ),
+                ),
+                child: Text(
+                  job.isActive ? '実行中' : '待機中',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: job.isActive ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFoldersCard(ThemeData theme, ColorScheme colorScheme) {
+    return Card(
+      color: colorScheme.surfaceContainer,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'フォルダ',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            _buildFolderItem(Icons.folder_shared_rounded, 'ソース', job.sourcePath, theme, colorScheme),
+            Padding(
+              padding: const EdgeInsets.only(left: 18.0, top: 8.0, bottom: 8.0),
+              child: Icon(Icons.arrow_downward_rounded, size: 20, color: colorScheme.onSurfaceVariant),
+            ),
+            _buildFolderItem(Icons.create_new_folder_rounded, 'ターゲット', job.targetPath, theme, colorScheme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFolderItem(IconData icon, String label, String path, ThemeData theme, ColorScheme colorScheme) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: colorScheme.primary, size: 28),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              Text(
+                path,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'monospace',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilterCard(ThemeData theme, ColorScheme colorScheme) {
+    final hasFilters = job.filterInclude.isNotEmpty || job.filterExclude.isNotEmpty;
+
+    return Card(
+      color: colorScheme.surfaceContainer,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'フィルタ',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            if (!hasFilters)
+              Text(
+                'フィルタなし',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              )
+            else ...[
+              if (job.filterInclude.isNotEmpty) ...[
+                Text('含める:', style: theme.textTheme.labelSmall),
+                Wrap(
+                  spacing: AppSpacing.xs,
+                  children: job.filterInclude
+                      .map((f) => Chip(
+                            label: Text(f),
+                            backgroundColor: colorScheme.primaryContainer.withAlpha(128),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              if (job.filterExclude.isNotEmpty) ...[
+                Text('除外する:', style: theme.textTheme.labelSmall),
+                Wrap(
+                  spacing: AppSpacing.xs,
+                  children: job.filterExclude
+                      .map((f) => Chip(
+                            label: Text(f),
+                            backgroundColor: colorScheme.errorContainer.withAlpha(128),
+                          ))
+                      .toList(),
+                ),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLastSyncResultCard(dynamic lastResultData, ThemeData theme, ColorScheme colorScheme) {
+    final result = lastResultData;
+    final duration = result.duration;
+    final mins = duration.inMinutes;
+    final secs = duration.inSeconds % 60;
+
+    return Card(
+      color: colorScheme.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '最後の同期結果',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Icon(
+                  result.errors > 0 ? Icons.error_rounded : Icons.check_circle_rounded,
+                  color: result.errors > 0 ? colorScheme.error : Colors.green,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                _buildStatChip('コピー', result.filesCopied.toString(), Colors.blue, colorScheme),
+                _buildStatChip('削除', result.filesDeleted.toString(), Colors.red, colorScheme),
+                _buildStatChip('スキップ', result.filesSkipped.toString(), Colors.grey, colorScheme),
+                _buildStatChip('競合', result.conflicts.toString(), Colors.orange, colorScheme),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              '所要時間: ${mins}m ${secs}s',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatChip(String label, String count, Color color, ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        border: Border.all(color: color.withAlpha(128)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 12)),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            count,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String label, String value, ThemeData theme, ColorScheme colorScheme) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: colorScheme.onSurfaceVariant),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBottomActionBar(bool isSyncing, bool isComparing, SyncProvider provider, ThemeData theme, ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(10),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: OutlinedButton(
+              onPressed: (isSyncing || isComparing) ? null : () {
+                // TODO: trigger comparison
+              },
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              ),
+              child: const Text('比較'),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            flex: 2,
+            child: ElevatedButton(
+              onPressed: isComparing ? null : () {
+                if (isSyncing) {
+                  provider.stopSync(job.id);
+                } else {
+                  provider.startSync(job.id);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                backgroundColor: isSyncing ? colorScheme.error : colorScheme.primary,
+                foregroundColor: isSyncing ? colorScheme.onError : colorScheme.onPrimary,
+              ),
+              child: Text(isSyncing ? '停止' : '同期開始'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

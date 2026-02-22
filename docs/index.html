@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncSphere - プライバシーポリシー / Privacy Policy</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #666;
+            --border: #e0e0e0;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121212;
+                --card-bg: #1e1e1e;
+                --text: #e0e0e0;
+                --text-secondary: #aaa;
+                --border: #333;
+            }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            padding: 0;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        header p { opacity: 0.9; font-size: 0.95rem; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        .lang-switch {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .lang-switch a {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            margin: 0 0.25rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .lang-switch a.active, .lang-switch a:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        h2 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+        h3 { font-size: 1.1rem; margin: 1rem 0 0.5rem; }
+        p { margin-bottom: 0.8rem; }
+        ul { margin: 0.5rem 0 1rem 1.5rem; }
+        li { margin-bottom: 0.3rem; }
+        strong { color: var(--primary); }
+        a { color: var(--primary); }
+        .updated { text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .contact { text-align: center; margin-top: 2rem; padding: 1.5rem; }
+        .section-ja, .section-en { display: none; }
+        .section-ja.active, .section-en.active { display: block; }
+        footer { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>📁 SyncSphere</h1>
+        <p>スマートファイル同期アプリ / Smart File Sync App</p>
+    </header>
+
+    <div class="container">
+        <div class="lang-switch">
+            <a href="#" id="btn-ja" class="active" onclick="switchLang('ja'); return false;">日本語</a>
+            <a href="#" id="btn-en" onclick="switchLang('en'); return false;">English</a>
+        </div>
+
+        <p class="updated">最終更新日 / Last Updated: 2026年2月22日 / February 22, 2026</p>
+
+        <!-- Japanese -->
+        <div class="section-ja active" id="content-ja">
+            <div class="card">
+                <h2>プライバシーポリシー</h2>
+                <p>SyncSphere（以下「本アプリ」）は、ユーザーのプライバシーを尊重し、個人情報の保護に努めています。</p>
+            </div>
+
+            <div class="card">
+                <h2>1. 収集する情報</h2>
+                <h3>1.1 ファイル同期データ</h3>
+                <p>本アプリはファイル同期機能を提供するため、ユーザーが指定したフォルダ内のファイル名、サイズ、更新日時などのメタデータにアクセスします。</p>
+                <p><strong>ファイルの内容は本アプリのサーバーに送信されることはありません。</strong>すべての同期はデバイス間で直接行われます。</p>
+
+                <h3>1.2 デバイス情報</h3>
+                <ul>
+                    <li>デバイス識別子（ランダム生成ID）</li>
+                    <li>デバイス名</li>
+                    <li>オペレーティングシステムの種類とバージョン</li>
+                    <li>ネットワーク接続情報（LANデバイス検出のため）</li>
+                </ul>
+
+                <h3>1.3 広告関連データ</h3>
+                <p>本アプリはGoogle AdMobを使用して広告を表示します。AdMobは以下の情報を収集する場合があります：</p>
+                <ul>
+                    <li>広告識別子（Advertising ID）</li>
+                    <li>おおよその位置情報</li>
+                    <li>アプリの使用状況データ</li>
+                    <li>デバイス情報</li>
+                </ul>
+                <p>詳細については、<a href="https://policies.google.com/privacy" target="_blank">Googleのプライバシーポリシー</a>をご参照ください。</p>
+            </div>
+
+            <div class="card">
+                <h2>2. 情報の使用目的</h2>
+                <ul>
+                    <li>ファイル同期サービスの提供と改善</li>
+                    <li>デバイス間の接続と通信の確立</li>
+                    <li>広告の表示（無料サービスの維持のため）</li>
+                    <li>アプリの不具合の修正と品質改善</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>3. 情報の共有</h2>
+                <ul>
+                    <li>ユーザーのファイルデータは第三者に共有されません</li>
+                    <li>広告表示のため、Google AdMobにデバイス識別子等が提供されます</li>
+                    <li>法律で要求される場合を除き、個人を特定できる情報を第三者と共有することはありません</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>4. データの保存</h2>
+                <ul>
+                    <li>同期ジョブの設定はデバイスのローカルストレージに保存されます</li>
+                    <li>ファイルのメタデータはデバイスのローカルストレージに保存されます</li>
+                    <li>クラウドサーバーへのデータ送信は行いません</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>5. ユーザーの権利</h2>
+                <ul>
+                    <li><strong>広告のオプトアウト:</strong> Google設定 &gt; 広告 &gt; 広告のパーソナライズをオフ</li>
+                    <li><strong>データの削除:</strong> アプリをアンインストールすることで、すべてのローカルデータが削除されます</li>
+                    <li><strong>権限の管理:</strong> デバイスの設定からアプリの権限をいつでも変更できます</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>6. セキュリティ</h2>
+                <ul>
+                    <li>デバイス間の通信はTLS暗号化で保護されます</li>
+                    <li>デバイス識別子は暗号学的に安全なハッシュ関数で生成されます</li>
+                    <li>ファイル転送中のデータはエンドツーエンドで暗号化されます</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>7. 子供のプライバシー</h2>
+                <p>本アプリは13歳未満の子供を対象としていません。13歳未満の子供から意図的に個人情報を収集することはありません。</p>
+            </div>
+
+            <div class="card">
+                <h2>8. お問い合わせ</h2>
+                <p>プライバシーに関するご質問やご要望は以下までご連絡ください：</p>
+                <p><strong>メール:</strong> <a href="mailto:syncsphere.app@gmail.com">syncsphere.app@gmail.com</a></p>
+            </div>
+        </div>
+
+        <!-- English -->
+        <div class="section-en" id="content-en">
+            <div class="card">
+                <h2>Privacy Policy</h2>
+                <p>SyncSphere ("the App") respects user privacy and is committed to protecting personal information.</p>
+            </div>
+
+            <div class="card">
+                <h2>1. Information We Collect</h2>
+                <h3>1.1 File Sync Data</h3>
+                <p>The App accesses file metadata (names, sizes, modification dates) in user-specified folders for sync functionality.</p>
+                <p><strong>File contents are never sent to our servers.</strong> All synchronization occurs directly between devices.</p>
+
+                <h3>1.2 Device Information</h3>
+                <ul>
+                    <li>Device identifier (randomly generated ID)</li>
+                    <li>Device name</li>
+                    <li>Operating system type and version</li>
+                    <li>Network connection info (for LAN device discovery)</li>
+                </ul>
+
+                <h3>1.3 Advertising Data</h3>
+                <p>The App uses Google AdMob to display advertisements. AdMob may collect:</p>
+                <ul>
+                    <li>Advertising ID</li>
+                    <li>Approximate location</li>
+                    <li>App usage data</li>
+                    <li>Device information</li>
+                </ul>
+                <p>For details, see <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.</p>
+            </div>
+
+            <div class="card">
+                <h2>2. How We Use Information</h2>
+                <ul>
+                    <li>Provide and improve file sync services</li>
+                    <li>Establish device connections</li>
+                    <li>Display advertisements (to maintain free service)</li>
+                    <li>Fix bugs and improve quality</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>3. Data Sharing</h2>
+                <ul>
+                    <li>User file data is never shared with third parties</li>
+                    <li>Device identifiers are shared with Google AdMob for advertising</li>
+                    <li>Personal information is not shared except as required by law</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>4. Data Storage</h2>
+                <ul>
+                    <li>Sync job settings are stored locally on the device</li>
+                    <li>File metadata databases are stored locally</li>
+                    <li>No data is sent to cloud servers</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>5. Your Rights</h2>
+                <ul>
+                    <li><strong>Ad Opt-out:</strong> Disable personalized ads via Google Settings &gt; Ads</li>
+                    <li><strong>Data Deletion:</strong> Uninstalling the app removes all local data</li>
+                    <li><strong>Permission Management:</strong> Change app permissions anytime in device settings</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>6. Security</h2>
+                <ul>
+                    <li>Device-to-device communication is protected by TLS encryption</li>
+                    <li>Device IDs are generated using cryptographically secure hash functions</li>
+                    <li>File transfers are end-to-end encrypted</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>7. Children's Privacy</h2>
+                <p>The App is not intended for children under 13. We do not knowingly collect information from children under 13.</p>
+            </div>
+
+            <div class="card">
+                <h2>8. Contact</h2>
+                <p>For privacy questions: <a href="mailto:syncsphere.app@gmail.com">syncsphere.app@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 SyncSphere. All rights reserved.
+    </footer>
+
+    <script>
+        function switchLang(lang) {
+            document.getElementById('content-ja').classList.toggle('active', lang === 'ja');
+            document.getElementById('content-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        }
+    </script>
+</body>
+</html>

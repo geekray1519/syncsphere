@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SyncSphere</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232196F3'><path d='M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary)" width="28" height="28">
+          <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+        </svg>
+        <h1>SyncSphere</h1>
+      </div>
+      <div class="status">
+        <span class="status-text" id="status-text">接続中...</span>
+        <div id="status-dot" class="dot"></div>
+      </div>
+    </header>
+
+    <main>
+      <section id="connect">
+        <div class="spinner"></div>
+        <h2>接続中...</h2>
+        <p>ローカルサーバーを検索しています</p>
+      </section>
+
+      <section id="dashboard" hidden>
+        <div class="stats-bar card stagger-1">
+          <div class="stat">
+            <span class="stat-label">デバイス</span>
+            <span class="stat-value" id="device-name">Android Device</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">同期ファイル数</span>
+            <span class="stat-value" id="sync-count">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">合計サイズ</span>
+            <span class="stat-value" id="sync-size">0 B</span>
+          </div>
+        </div>
+
+        <div class="tabs-container card stagger-2">
+          <div class="tabs">
+            <button class="tab active" data-target="tab-sync">📁 フォルダ同期</button>
+            <button class="tab" data-target="tab-transfer">📤 クイック転送</button>
+          </div>
+
+          <div id="tab-sync" class="tab-content active">
+            <div class="sync-actions">
+              <button id="btn-pick-folder" class="btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
+                同期フォルダを選択
+              </button>
+              <button id="btn-sync-now" class="btn-secondary" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                同期開始
+              </button>
+            </div>
+            
+            <div id="sync-status" class="hidden">
+              <div class="progress-info">
+                <span id="sync-current-file">準備中...</span>
+                <span id="sync-percentage">0%</span>
+              </div>
+              <div class="progress-track">
+                <div id="sync-progress-bar" class="progress-fill"></div>
+              </div>
+            </div>
+
+            <div id="file-list" class="list-container">
+              <div class="empty-state">フォルダを選択して同期を開始します</div>
+            </div>
+          </div>
+
+          <div id="tab-transfer" class="tab-content" hidden>
+            <div id="drop-zone" class="drop-zone">
+              <div class="drop-icon">📤</div>
+              <h3>ファイルをドラッグ&ドロップ</h3>
+              <p>または、クリックしてファイルを選択</p>
+              <input type="file" id="file-input" multiple hidden>
+            </div>
+            <div id="transfer-list" class="list-container hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="unsupported" class="card" hidden>
+        <div class="unsupported-icon">⚠️</div>
+        <h2>このブラウザはフォルダ同期に対応していません</h2>
+        <p>Chrome または Edge（PC版）をご利用ください。</p>
+        <div class="fallback-note">
+          <span>💡</span> クイック転送ならどのブラウザでも使えます
+        </div>
+        <button id="btn-force-transfer" class="btn-primary mt-4">クイック転送を使う</button>
+      </section>
+    </main>
+
+    <footer>
+      <p>SyncSphere v1.0 • 🔒 ローカルネットワーク暗号化転送</p>
+    </footer>
+    
+    <div id="toast-container"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

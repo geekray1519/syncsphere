@@ -1,0 +1,87 @@
+name: syncsphere
+description: "SyncSphere - スマートファイル同期アプリ。FreeFileSync + Syncthing の機能をよりわかりやすいUIで。"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  # UI & Design
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.2
+  percent_indicator: ^4.2.3
+  gap: ^3.0.1
+
+  # State Management
+  provider: ^6.1.2
+  
+  # File System
+  path_provider: ^2.1.5
+  file_picker: ^9.2.1
+  path: ^1.9.1
+  watcher: ^1.1.1
+  
+  # Storage & Database
+  shared_preferences: ^2.3.4
+  sqflite: ^2.4.1
+  drift: ^2.23.1
+  sqlite3_flutter_libs: ^0.5.28
+  
+  # Networking
+  shelf: ^1.4.2
+  shelf_router: ^1.1.4
+  http: ^1.2.2
+  multicast_dns: ^0.3.2+9
+  
+  # Crypto & Security
+  crypto: ^3.0.6
+  pointycastle: ^3.9.1
+  
+  # Ads (Android only)
+  google_mobile_ads: ^5.3.0
+  
+  # In-App Purchases (Premium plan)
+  in_app_purchase: ^3.2.3
+  
+  # Permissions
+  permission_handler: ^11.3.1
+  
+  # Utils
+  uuid: ^4.5.1
+  collection: ^1.19.1
+  async: ^2.12.0
+  rxdart: ^0.28.0
+  archive: ^4.0.4
+  equatable: ^2.0.7
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+  
+  # QR Code (for device pairing)
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^6.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.14
+  json_serializable: ^6.9.4
+  freezed: ^2.5.8
+  drift_dev: ^2.23.1
+
+flutter:
+  uses-material-design: true
+  generate: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/web/

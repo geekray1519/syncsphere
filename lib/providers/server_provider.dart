@@ -1,0 +1,141 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+import 'package:syncsphere/core/server/sync_server.dart';
+import 'package:syncsphere/core/server/web_asset_extractor.dart';
+
+/// Provides server state and controls for the SyncSphere HTTP + WebSocket
+/// server. Used by the Server Screen to manage the browser-based file sync.
+class ServerProvider extends ChangeNotifier {
+  ServerProvider();
+
+  final WebAssetExtractor _assetExtractor = WebAssetExtractor();
+
+  SyncServer? _server;
+
+  bool _isRunning = false;
+  String? _serverUrl;
+  String? _ipAddress;
+  final int _port = 8384;
+  int _connectedClients = 0;
+  String _syncDir = '';
+
+  bool get isRunning => _isRunning;
+  String? get serverUrl => _serverUrl;
+  String? get ipAddress => _ipAddress;
+  int get port => _port;
+  int get connectedClients => _connectedClients;
+  String get syncDir => _syncDir;
+  set syncDir(String value) {
+    if (_syncDir != value) {
+      _syncDir = value;
+      notifyListeners();
+    }
+  }
+
+  /// Starts the server, serving web UI and handling WebSocket connections.
+  ///
+  /// [syncDir] is the directory on the device used for file sync.
+  /// If empty, uses the default SyncSphere directory on external storage.
+  Future<void> startServer(String syncDir) async {
+    if (_isRunning) {
+      return;
+    }
+
+    try {
+      // Resolve sync directory
+      if (syncDir.isEmpty) {
+        syncDir = await _getDefaultSyncDir();
+      }
+      _syncDir = syncDir;
+
+      // Ensure sync directory exists
+      final Directory dir = Directory(_syncDir);
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+
+      // Extract web assets
+      final String webRoot = await _assetExtractor.extractAssets();
+
+      // Create SyncServer with resolved paths
+      _server = SyncServer(
+        webRoot: webRoot,
+        syncDir: _syncDir,
+        port: _port,
+        onClientCountChanged: (int count) {
+          _connectedClients = count;
+          notifyListeners();
+        },
+      );
+
+      // Get local IP before starting
+      _ipAddress = await _server!.getLocalIpAddress();
+
+      // Start the server
+      await _server!.start();
+
+      _isRunning = true;
+      if (_ipAddress != null) {
+        _serverUrl = 'http://$_ipAddress:$_port';
+      }
+      notifyListeners();
+    } on Exception {
+      _isRunning = false;
+      _serverUrl = null;
+      _server = null;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  /// Stops the server and disconnects all clients.
+  Future<void> stopServer() async {
+    if (!_isRunning) {
+      return;
+    }
+
+    await _server?.stop();
+    _server = null;
+    _isRunning = false;
+    _serverUrl = null;
+    _connectedClients = 0;
+    notifyListeners();
+  }
+
+  /// Toggles the server on or off.
+  Future<void> toggleServer(String syncDir) async {
+    if (_isRunning) {
+      await stopServer();
+    } else {
+      await startServer(syncDir);
+    }
+  }
+
+  Future<String> _getDefaultSyncDir() async {
+    try {
+      // Try external storage first (Android)
+      final Directory? externalDir = await getExternalStorageDirectory();
+      if (externalDir != null) {
+        return p.join(externalDir.path, 'SyncSphere');
+      }
+    } on Exception {
+      // External storage not available
+    }
+
+    // Fallback to app documents directory
+    final Directory docsDir = await getApplicationDocumentsDirectory();
+    return p.join(docsDir.path, 'SyncSphere');
+  }
+
+  @override
+  void dispose() {
+    if (_isRunning) {
+      _server?.stop();
+    }
+    super.dispose();
+  }
+}
