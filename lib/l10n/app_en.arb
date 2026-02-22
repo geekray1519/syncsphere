@@ -357,5 +357,40 @@
   "preparing": "Preparing...",
   "detailedInfo": "Details",
   "directPcSync": "Direct sync with your PC",
-  "disableBatteryOptDesc": "Disabling battery optimization improves background sync reliability"
+  "disableBatteryOptDesc": "Disabling battery optimization improves background sync reliability",
+  "summaryCardSemantics": "{title}: {value}",
+  "@summaryCardSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceStatusSemantics": "Device status: {status}",
+  "@deviceStatusSemantics": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "syncProgressSemantics": "Progress: {percent}%",
+  "@syncProgressSemantics": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "serverStatusSemantics": "Server status: {status}",
+  "@serverStatusSemantics": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -37,6 +37,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
       appBar: AppBar(
         title: Text(l10n.syncing),
         leading: IconButton(
+          tooltip: l10n.close,
           icon: const Icon(Icons.close_rounded),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -87,22 +88,26 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
       tween: Tween<double>(begin: 0, end: progress),
       duration: AppSpacing.animNormal,
       builder: (context, value, child) {
+        final int percent = (value * 100).toInt();
         return Stack(
           alignment: Alignment.center,
           children: [
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: CircularProgressIndicator(
-                value: value,
-                strokeWidth: 16,
-                backgroundColor: colorScheme.surfaceContainerHighest,
-                color: colorScheme.primary,
-                strokeCap: StrokeCap.round,
+            Semantics(
+              label: AppLocalizations.of(context)!.syncProgressSemantics(percent),
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: CircularProgressIndicator(
+                  value: value,
+                  strokeWidth: 16,
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  color: colorScheme.primary,
+                  strokeCap: StrokeCap.round,
+                ),
               ),
             ),
             Text(
-              '${(value * 100).toInt()}%',
+              '$percent%',
               style: theme.textTheme.displayMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.primary,

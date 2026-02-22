@@ -995,4 +995,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get disableBatteryOptDesc =>
       'Disabling battery optimization improves background sync reliability';
+
+  @override
+  String summaryCardSemantics(String title, String value) {
+    return '$title: $value';
+  }
+
+  @override
+  String deviceStatusSemantics(String status) {
+    return 'Device status: $status';
+  }
+
+  @override
+  String syncProgressSemantics(int percent) {
+    return 'Progress: $percent%';
+  }
+
+  @override
+  String serverStatusSemantics(String status) {
+    return 'Server status: $status';
+  }
 }

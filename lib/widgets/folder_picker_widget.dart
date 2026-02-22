@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:syncsphere/l10n/app_localizations.dart';
 import 'package:syncsphere/theme/app_spacing.dart';
 
 class FolderPickerWidget extends StatelessWidget {
@@ -27,6 +28,7 @@ class FolderPickerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final bool hasPath = currentPath != null && currentPath!.isNotEmpty;
 
     return Column(
@@ -67,7 +69,7 @@ class FolderPickerWidget extends StatelessWidget {
                   const SizedBox(width: AppSpacing.lg),
                   Expanded(
                     child: Text(
-                      hasPath ? currentPath! : 'フォルダを選択してください',
+                      hasPath ? currentPath! : l10n.noFolderSelected,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: hasPath ? colorScheme.onSurface : colorScheme.onSurfaceVariant,
                       ),
@@ -77,6 +79,7 @@ class FolderPickerWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   IconButton(
+                    tooltip: l10n.browseFolder,
                     onPressed: _pickFolder,
                     icon: const Icon(Icons.search),
                     color: colorScheme.primary,

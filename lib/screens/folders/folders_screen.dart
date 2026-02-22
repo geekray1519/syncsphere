@@ -59,6 +59,7 @@ class FoldersScreen extends StatelessWidget {
               ),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: l10n.quickActionAddFolder,
         onPressed: () {
           Navigator.pushNamed(context, '/wizard');
         },

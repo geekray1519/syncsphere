@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,7 @@ class PremiumScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.premium),
         leading: IconButton(
+          tooltip: l10n.back,
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -175,7 +177,12 @@ class PremiumScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xxl),
             ElevatedButton(
-              onPressed: provider.isPurchasePending ? null : () => provider.purchasePremium(),
+              onPressed: provider.isPurchasePending
+                  ? null
+                  : () {
+                      HapticFeedback.mediumImpact();
+                      provider.purchasePremium();
+                    },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
                 shape: RoundedRectangleBorder(

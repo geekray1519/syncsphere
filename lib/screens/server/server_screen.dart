@@ -54,6 +54,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
       appBar: AppBar(
         title: Text(l10n.serverTitle),
         leading: IconButton(
+          tooltip: l10n.back,
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -127,35 +128,38 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     final statusText = isRunning ? l10n.serverRunning : l10n.serverStopped;
 
     return Center(
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xl,
-          vertical: AppSpacing.sm,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-          border: Border.all(color: statusColor, width: 2),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: AppSpacing.md,
-              height: AppSpacing.md,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: statusColor,
+      child: Semantics(
+        label: l10n.serverStatusSemantics(statusText),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl,
+            vertical: AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+            border: Border.all(color: statusColor, width: 2),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: AppSpacing.md,
+                height: AppSpacing.md,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: statusColor,
+                ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Text(
-              statusText,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: statusColor,
-                fontWeight: FontWeight.bold,
+              const SizedBox(width: AppSpacing.md),
+              Text(
+                statusText,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: statusColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -230,13 +234,18 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     IconButton.filledTonal(
+                      tooltip: l10n.copyUrl,
                       onPressed: () {
+                        HapticFeedback.lightImpact();
                         Clipboard.setData(ClipboardData(text: url));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(l10n.serverUrlCopied),
                             backgroundColor: colorScheme.primary,
                             behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                         );
                       },
@@ -339,6 +348,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
   Widget _buildToggleButton(bool isRunning, ServerProvider provider, ColorScheme colorScheme, ThemeData theme, AppLocalizations l10n) {
     return ElevatedButton(
       onPressed: () {
+        HapticFeedback.mediumImpact();
         provider.toggleServer(provider.syncDir);
       },
       style: ElevatedButton.styleFrom(

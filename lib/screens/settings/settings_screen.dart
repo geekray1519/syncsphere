@@ -225,8 +225,9 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () async {
                       final status = await Permission.ignoreBatteryOptimizations.request();
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(status.isGranted ? l10n.settingsSaved : l10n.permissionDenied)),
+                        _showStyledSnackBar(
+                          context,
+                          message: status.isGranted ? l10n.settingsSaved : l10n.permissionDenied,
                         );
                       }
                     },
@@ -376,14 +377,16 @@ class SettingsScreen extends StatelessWidget {
       await configFile.writeAsString(prettyJson);
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.exportConfig}: ${configFile.path}')),
+        _showStyledSnackBar(
+          context,
+          message: '${l10n.exportConfig}: ${configFile.path}',
         );
       }
     } catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.errorGeneral}: $error')),
+        _showStyledSnackBar(
+          context,
+          message: '${l10n.errorGeneral}: $error',
         );
       }
     }
@@ -418,17 +421,36 @@ class SettingsScreen extends StatelessWidget {
       await settings.importConfigFromJson(decoded);
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.importConfig}: ${l10n.done}')),
+        _showStyledSnackBar(
+          context,
+          message: '${l10n.importConfig}: ${l10n.done}',
         );
       }
     } catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.errorGeneral}: $error')),
+        _showStyledSnackBar(
+          context,
+          message: '${l10n.errorGeneral}: $error',
         );
       }
     }
+  }
+
+  void _showStyledSnackBar(
+    BuildContext context, {
+    required String message,
+    SnackBarAction? action,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: action,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
   }
 
   Future<Directory> _resolveConfigDirectory() async {

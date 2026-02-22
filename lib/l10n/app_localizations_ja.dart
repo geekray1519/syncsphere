@@ -979,4 +979,24 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get disableBatteryOptDesc => 'バッテリー最適化を無効にすると、バックグラウンド同期が安定します';
+
+  @override
+  String summaryCardSemantics(String title, String value) {
+    return '$title: $value';
+  }
+
+  @override
+  String deviceStatusSemantics(String status) {
+    return 'デバイス状態: $status';
+  }
+
+  @override
+  String syncProgressSemantics(int percent) {
+    return '進捗: $percent%';
+  }
+
+  @override
+  String serverStatusSemantics(String status) {
+    return 'サーバーステータス: $status';
+  }
 }

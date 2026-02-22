@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_theme.dart';
@@ -62,6 +63,7 @@ class _AppShellState extends State<AppShell> {
 
   void _onTabSelected(int index) {
     if (_currentIndex == index) return;
+    HapticFeedback.lightImpact();
     setState(() => _currentIndex = index);
     _pageController.jumpToPage(index);
   }

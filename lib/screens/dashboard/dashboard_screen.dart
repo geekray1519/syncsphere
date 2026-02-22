@@ -52,6 +52,10 @@ class DashboardScreen extends StatelessWidget {
                           value: totalFolders.toString(),
                           icon: Icons.folder_rounded,
                           color: theme.colorScheme.primary,
+                          semanticsLabel: l10n.summaryCardSemantics(
+                            l10n.tabFolders,
+                            totalFolders.toString(),
+                          ),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -61,6 +65,10 @@ class DashboardScreen extends StatelessWidget {
                           value: connectedDevices.toString(),
                           icon: Icons.devices_rounded,
                           color: theme.colorScheme.secondary,
+                          semanticsLabel: l10n.summaryCardSemantics(
+                            l10n.tabDevices,
+                            connectedDevices.toString(),
+                          ),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -70,6 +78,10 @@ class DashboardScreen extends StatelessWidget {
                           value: activeSyncs.toString(),
                           icon: Icons.sync_rounded,
                           color: theme.colorScheme.tertiary,
+                          semanticsLabel: l10n.summaryCardSemantics(
+                            l10n.activeSyncs,
+                            activeSyncs.toString(),
+                          ),
                         ),
                       ),
                     ],
@@ -146,51 +158,56 @@ class _SummaryCard extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.color,
+    required this.semanticsLabel,
   });
 
   final String title;
   final String value;
   final IconData icon;
   final Color color;
+  final String semanticsLabel;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
 
-    return Card(
-      elevation: 0,
-      color: colorScheme.surfaceContainerHighest,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: AppSpacing.md,
-          horizontal: AppSpacing.sm,
+    return Semantics(
+      label: semanticsLabel,
+      child: Card(
+        elevation: 0,
+        color: colorScheme.surfaceContainerHighest,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(icon, color: color, size: AppSpacing.iconMd),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              value,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: AppSpacing.md,
+            horizontal: AppSpacing.sm,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(icon, color: color, size: AppSpacing.iconMd),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                value,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              title,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                title,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

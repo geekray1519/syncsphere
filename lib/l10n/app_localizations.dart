@@ -2029,6 +2029,30 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'バッテリー最適化を無効にすると、バックグラウンド同期が安定します'**
   String get disableBatteryOptDesc;
+
+  /// No description provided for @summaryCardSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'{title}: {value}'**
+  String summaryCardSemantics(String title, String value);
+
+  /// No description provided for @deviceStatusSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'デバイス状態: {status}'**
+  String deviceStatusSemantics(String status);
+
+  /// No description provided for @syncProgressSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'進捗: {percent}%'**
+  String syncProgressSemantics(int percent);
+
+  /// No description provided for @serverStatusSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'サーバーステータス: {status}'**
+  String serverStatusSemantics(String status);
 }
 
 class _AppLocalizationsDelegate

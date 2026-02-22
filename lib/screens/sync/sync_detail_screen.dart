@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/sync_job.dart';
@@ -420,6 +421,7 @@ class SyncDetailScreen extends StatelessWidget {
           Expanded(
             child: OutlinedButton(
               onPressed: (isSyncing || isComparing) ? null : () {
+                HapticFeedback.mediumImpact();
                 provider.startComparison(job.id);
               },
               style: OutlinedButton.styleFrom(
@@ -433,6 +435,7 @@ class SyncDetailScreen extends StatelessWidget {
             flex: 2,
             child: ElevatedButton(
               onPressed: isComparing ? null : () {
+                HapticFeedback.mediumImpact();
                 if (isSyncing) {
                   provider.stopSync(job.id);
                 } else {

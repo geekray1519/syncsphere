@@ -23,10 +23,12 @@ class HomeScreen extends StatelessWidget {
         centerTitle: false,
         actions: [
           IconButton(
+            tooltip: l10n.tabDevices,
             icon: const Icon(Icons.devices_rounded),
             onPressed: () => Navigator.pushNamed(context, '/devices'),
           ),
           IconButton(
+            tooltip: l10n.tabSettings,
             icon: const Icon(Icons.settings_rounded),
             onPressed: () => Navigator.pushNamed(context, '/settings'),
           ),
@@ -146,6 +148,7 @@ class HomeScreen extends StatelessWidget {
         builder: (context, syncProvider, child) {
           if (syncProvider.syncJobs.isEmpty) return const SizedBox.shrink();
           return FloatingActionButton.extended(
+            tooltip: l10n.createNewJob,
             onPressed: () {
               Navigator.pushNamed(context, '/wizard');
             },

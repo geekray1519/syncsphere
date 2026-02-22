@@ -65,14 +65,19 @@ class DeviceDetailScreen extends StatelessWidget {
                 valueWidget: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: device.isOnline
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.error,
+                    Semantics(
+                      label: l10n.deviceStatusSemantics(
+                        device.isOnline ? l10n.deviceOnline : l10n.deviceOffline,
+                      ),
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: device.isOnline
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.error,
+                        ),
                       ),
                     ),
                     const Gap(AppSpacing.xs),

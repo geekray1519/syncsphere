@@ -359,5 +359,40 @@
   "preparing": "準備中...",
   "detailedInfo": "詳細情報",
   "directPcSync": "PCと直接接続して同期",
-  "disableBatteryOptDesc": "バッテリー最適化を無効にすると、バックグラウンド同期が安定します"
+  "disableBatteryOptDesc": "バッテリー最適化を無効にすると、バックグラウンド同期が安定します",
+  "summaryCardSemantics": "{title}: {value}",
+  "@summaryCardSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceStatusSemantics": "デバイス状態: {status}",
+  "@deviceStatusSemantics": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "syncProgressSemantics": "進捗: {percent}%",
+  "@syncProgressSemantics": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "serverStatusSemantics": "サーバーステータス: {status}",
+  "@serverStatusSemantics": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -106,6 +107,7 @@ class DevicesScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        tooltip: l10n.addDevice,
         onPressed: () => _showAddDeviceSheet(context),
         icon: const Icon(Icons.add),
         label: Text(l10n.addDevice),
@@ -189,14 +191,19 @@ class _DeviceCard extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.cardPadding),
           child: Row(
             children: [
-              Badge(
-                backgroundColor: badgeColor,
-                smallSize: 12,
-                child: CircleAvatar(
-                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                  child: Icon(
-                    _getPlatformIcon(device.platform),
-                    color: theme.colorScheme.onSurfaceVariant,
+              Semantics(
+                label: l10n.deviceStatusSemantics(
+                  isOnline ? l10n.deviceOnline : l10n.deviceOffline,
+                ),
+                child: Badge(
+                  backgroundColor: badgeColor,
+                  smallSize: 12,
+                  child: CircleAvatar(
+                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                    child: Icon(
+                      _getPlatformIcon(device.platform),
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ),
@@ -431,6 +438,7 @@ class _ManualAddDialogState extends State<_ManualAddDialog> {
         FilledButton(
           onPressed: () {
             if (_addressController.text.isNotEmpty && _portController.text.isNotEmpty) {
+              HapticFeedback.mediumImpact();
               final newDevice = DeviceInfo(
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
                 name: 'Unknown Device',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +81,13 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
             if (_currentStep == 1) {
               if (!_formKey.currentState!.validate() || _sourcePath.isEmpty || _targetPath.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.errorGeneral)),
+                  SnackBar(
+                    content: Text(l10n.errorGeneral),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 );
                 return;
               }
@@ -479,6 +486,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
   }
 
   void _saveJob() {
+    HapticFeedback.mediumImpact();
     final job = SyncJob(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _jobName.isEmpty ? 'New Sync Job' : _jobName,
