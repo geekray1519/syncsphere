@@ -7,6 +7,7 @@ import 'package:syncsphere/theme/app_spacing.dart';
 import 'package:syncsphere/widgets/ad_banner_widget.dart';
 import 'package:syncsphere/widgets/empty_state_widget.dart';
 import 'package:syncsphere/widgets/sync_job_card.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Dashboard — main overview screen (tab 0 in AppShell).
 class DashboardScreen extends StatelessWidget {
@@ -15,6 +16,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final SyncProvider syncProvider = context.watch<SyncProvider>();
     final DeviceProvider deviceProvider = context.watch<DeviceProvider>();
 
@@ -72,17 +74,17 @@ class DashboardScreen extends StatelessWidget {
                   children: <Widget>[
                     ActionChip(
                       avatar: const Icon(Icons.create_new_folder_rounded, size: 18),
-                      label: const Text('フォルダ追加'),
+                      label: Text(l10n.quickActionAddFolder),
                       onPressed: () => Navigator.pushNamed(context, '/wizard'),
                     ),
                     ActionChip(
                       avatar: const Icon(Icons.computer_rounded, size: 18),
-                      label: const Text('PC同期'),
+                      label: Text(l10n.quickActionPcSync),
                       onPressed: () => Navigator.pushNamed(context, '/server'),
                     ),
                     ActionChip(
                       avatar: const Icon(Icons.qr_code_scanner_rounded, size: 18),
-                      label: const Text('デバイス追加'),
+                      label: Text(l10n.quickActionAddDevice),
                       onPressed: () {
                         // Normally navigates to devices tab or scanner
                       },

@@ -569,7 +569,7 @@ abstract class AppLocalizations {
   /// No description provided for @compareFiles.
   ///
   /// In ja, this message translates to:
-  /// **'ファイルを比較'**
+  /// **'比較'**
   String get compareFiles;
 
   /// No description provided for @comparing.
@@ -719,13 +719,13 @@ abstract class AppLocalizations {
   /// No description provided for @filterInclude.
   ///
   /// In ja, this message translates to:
-  /// **'含めるパターン'**
+  /// **'含める'**
   String get filterInclude;
 
   /// No description provided for @filterExclude.
   ///
   /// In ja, this message translates to:
-  /// **'除外するパターン'**
+  /// **'除外する'**
   String get filterExclude;
 
   /// No description provided for @filterIncludeHint.
@@ -1424,17 +1424,35 @@ abstract class AppLocalizations {
   /// **'共有フォルダ'**
   String get sharedFolders;
 
+  /// No description provided for @noSharedFolders.
+  ///
+  /// In ja, this message translates to:
+  /// **'共有フォルダはありません'**
+  String get noSharedFolders;
+
   /// No description provided for @statistics.
   ///
   /// In ja, this message translates to:
   /// **'統計'**
   String get statistics;
 
+  /// No description provided for @status.
+  ///
+  /// In ja, this message translates to:
+  /// **'ステータス'**
+  String get status;
+
   /// No description provided for @removeDeviceConfirm.
   ///
   /// In ja, this message translates to:
   /// **'このデバイスを削除しますか？'**
   String get removeDeviceConfirm;
+
+  /// No description provided for @actionCannotBeUndone.
+  ///
+  /// In ja, this message translates to:
+  /// **'この操作は取り消せません。'**
+  String get actionCannotBeUndone;
 
   /// No description provided for @settingsSync.
   ///
@@ -1559,7 +1577,7 @@ abstract class AppLocalizations {
   /// No description provided for @syncCompleteNotification.
   ///
   /// In ja, this message translates to:
-  /// **'同期完了通知'**
+  /// **'同期完了'**
   String get syncCompleteNotification;
 
   /// No description provided for @errorNotification.
@@ -1694,6 +1712,12 @@ abstract class AppLocalizations {
   /// **'フィルタ'**
   String get syncFilters;
 
+  /// No description provided for @forceRescan.
+  ///
+  /// In ja, this message translates to:
+  /// **'強制再スキャン'**
+  String get forceRescan;
+
   /// No description provided for @noFilters.
   ///
   /// In ja, this message translates to:
@@ -1765,6 +1789,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'ライセンス'**
   String get licenses;
+
+  /// No description provided for @sourceCode.
+  ///
+  /// In ja, this message translates to:
+  /// **'ソースコード'**
+  String get sourceCode;
 
   /// No description provided for @privacyPolicy.
   ///

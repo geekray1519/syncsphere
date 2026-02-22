@@ -7,6 +7,7 @@ import '../../models/device_info.dart';
 import '../../models/sync_enums.dart';
 import '../../providers/device_provider.dart';
 import '../../theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
 
 class DevicesScreen extends StatelessWidget {
   const DevicesScreen({super.key});
@@ -19,11 +20,12 @@ class DevicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        title: const Text('デバイス', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(l10n.tabDevices, style: const TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: Consumer<DeviceProvider>(
@@ -106,7 +108,7 @@ class DevicesScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddDeviceSheet(context),
         icon: const Icon(Icons.add),
-        label: const Text('デバイスを追加'),
+        label: Text(l10n.addDevice),
       ).animate().scale(delay: 300.ms, duration: 300.ms, curve: Curves.easeOutBack),
     );
   }
@@ -280,6 +282,7 @@ class _AddDeviceSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(
         left: AppSpacing.pagePadding,
@@ -292,7 +295,7 @@ class _AddDeviceSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'デバイスを追加',
+            l10n.addDevice,
             style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -312,7 +315,7 @@ class _AddDeviceSheet extends StatelessWidget {
               Expanded(
                 child: _AddOptionCard(
                   icon: Icons.edit,
-                  label: '手動追加',
+                  label: l10n.manualAdd,
                   onTap: () {
                     Navigator.pop(context);
                     _showManualAddDialog(context);
@@ -393,8 +396,9 @@ class _ManualAddDialogState extends State<_ManualAddDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('手動追加'),
+      title: Text(l10n.manualAdd),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -419,7 +423,7 @@ class _ManualAddDialogState extends State<_ManualAddDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('キャンセル'),
+          child: Text(l10n.cancel),
         ),
         FilledButton(
           onPressed: () {
@@ -437,7 +441,7 @@ class _ManualAddDialogState extends State<_ManualAddDialog> {
               Navigator.pop(context);
             }
           },
-          child: const Text('追加'),
+          child: Text(l10n.addDevice),
         ),
       ],
     );

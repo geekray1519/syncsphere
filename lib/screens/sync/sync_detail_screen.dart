@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/sync_job.dart';
 import '../../providers/sync_provider.dart';
 import '../../theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
 
 class SyncDetailScreen extends StatelessWidget {
   const SyncDetailScreen({super.key, required this.job});
@@ -15,6 +16,7 @@ class SyncDetailScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final syncProvider = context.watch<SyncProvider>();
+    final l10n = AppLocalizations.of(context)!;
     final isSyncing = job.isActive;
     final isComparing = syncProvider.isComparing(job.id);
     final lastResult = syncProvider.history.cast<dynamic>().firstWhere((r) => r.jobId == job.id, orElse: () => null) as dynamic;
@@ -29,23 +31,23 @@ class SyncDetailScreen extends StatelessWidget {
               // Action logic handled elsewhere
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'edit',
                 child: Row(
                   children: [
-                    Icon(Icons.edit_rounded, size: 20),
-                    SizedBox(width: 8),
-                    Text('編集'),
+                    const Icon(Icons.edit_rounded, size: 20),
+                    const SizedBox(width: 8),
+                    Text(l10n.edit),
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'rescan',
                 child: Row(
                   children: [
-                    Icon(Icons.refresh_rounded, size: 20),
-                    SizedBox(width: 8),
-                    Text('強制再スキャン'),
+                    const Icon(Icons.refresh_rounded, size: 20),
+                    const SizedBox(width: 8),
+                    Text(l10n.forceRescan),
                   ],
                 ),
               ),
@@ -56,7 +58,7 @@ class SyncDetailScreen extends StatelessWidget {
                   children: [
                     Icon(Icons.delete_rounded, size: 20, color: colorScheme.error),
                     const SizedBox(width: 8),
-                    Text('削除', style: TextStyle(color: colorScheme.error)),
+                    Text(l10n.delete, style: TextStyle(color: colorScheme.error)),
                   ],
                 ),
               ),
@@ -75,7 +77,7 @@ class SyncDetailScreen extends StatelessWidget {
                   const SizedBox(height: AppSpacing.lg),
                   _buildFoldersCard(theme, colorScheme),
                   const SizedBox(height: AppSpacing.lg),
-                  _buildFilterCard(theme, colorScheme),
+                  _buildFilterCard(theme, colorScheme, l10n),
                   if (lastResult != null) ...[
                     const SizedBox(height: AppSpacing.lg),
                     _buildLastSyncResultCard(lastResult, theme, colorScheme),
@@ -83,7 +85,7 @@ class SyncDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            _buildBottomActionBar(isSyncing, isComparing, syncProvider, theme, colorScheme),
+            _buildBottomActionBar(isSyncing, isComparing, syncProvider, theme, colorScheme, l10n),
           ],
         ),
       ),
@@ -202,7 +204,7 @@ class SyncDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterCard(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildFilterCard(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     final hasFilters = job.filterInclude.isNotEmpty || job.filterExclude.isNotEmpty;
 
     return Card(
@@ -233,7 +235,7 @@ class SyncDetailScreen extends StatelessWidget {
               )
             else ...[
               if (job.filterInclude.isNotEmpty) ...[
-                Text('含める:', style: theme.textTheme.labelSmall),
+                Text('${l10n.filterInclude}:', style: theme.textTheme.labelSmall),
                 Wrap(
                   spacing: AppSpacing.xs,
                   children: job.filterInclude
@@ -246,7 +248,7 @@ class SyncDetailScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
               ],
               if (job.filterExclude.isNotEmpty) ...[
-                Text('除外する:', style: theme.textTheme.labelSmall),
+                Text('${l10n.filterExclude}:', style: theme.textTheme.labelSmall),
                 Wrap(
                   spacing: AppSpacing.xs,
                   children: job.filterExclude
@@ -363,7 +365,7 @@ class SyncDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomActionBar(bool isSyncing, bool isComparing, SyncProvider provider, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildBottomActionBar(bool isSyncing, bool isComparing, SyncProvider provider, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
@@ -386,7 +388,7 @@ class SyncDetailScreen extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
               ),
-              child: const Text('比較'),
+              child: Text(l10n.compareFiles),
             ),
           ),
           const SizedBox(width: AppSpacing.md),

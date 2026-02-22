@@ -5,6 +5,7 @@ import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/theme/app_spacing.dart';
 import 'package:syncsphere/widgets/empty_state_widget.dart';
 import 'package:syncsphere/widgets/sync_job_card.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Folders list — sync folder management (tab 1 in AppShell).
 class FoldersScreen extends StatelessWidget {
@@ -13,10 +14,11 @@ class FoldersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SyncProvider syncProvider = context.watch<SyncProvider>();
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('フォルダ'),
+        title: Text(l10n.tabFolders),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

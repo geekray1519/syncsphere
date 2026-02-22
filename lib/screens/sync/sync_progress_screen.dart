@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../providers/sync_provider.dart';
 import '../../theme/app_spacing.dart';
 
@@ -21,6 +22,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final syncProvider = context.watch<SyncProvider>();
+    final l10n = AppLocalizations.of(context)!;
     // Job reference for potential future use
     final progress = syncProvider.progress;
 
@@ -33,7 +35,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: const Text('同期中...'),
+        title: Text(l10n.syncing),
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
           onPressed: () => Navigator.of(context).pop(),
@@ -70,7 +72,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
                       borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                     ),
                   ),
-                  child: const Text('キャンセル', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.cancel, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

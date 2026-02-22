@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../providers/premium_provider.dart';
 import '../../theme/app_spacing.dart';
 
@@ -12,11 +13,12 @@ class PremiumScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final premiumProvider = context.watch<PremiumProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: const Text('プレミアム'),
+        title: Text(l10n.premium),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
@@ -25,7 +27,7 @@ class PremiumScreen extends StatelessWidget {
       body: SafeArea(
         child: premiumProvider.isPremium
             ? _buildSuccessState(theme, colorScheme)
-            : _buildPurchaseState(premiumProvider, theme, colorScheme),
+            : _buildPurchaseState(premiumProvider, theme, colorScheme, l10n),
       ),
     );
   }
@@ -109,7 +111,7 @@ class PremiumScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPurchaseState(PremiumProvider provider, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildPurchaseState(PremiumProvider provider, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -169,7 +171,7 @@ class PremiumScreen extends StatelessWidget {
               ),
               child: provider.isPurchasePending
                   ? const CircularProgressIndicator()
-                  : const Text('プレミアムを購入'),
+                  : Text(l10n.purchasePremium),
             ),
             const SizedBox(height: AppSpacing.md),
             TextButton(
@@ -177,7 +179,7 @@ class PremiumScreen extends StatelessWidget {
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
               ),
-              child: const Text('購入を復元'),
+              child: Text(l10n.restorePurchases),
             ),
             if (provider.errorMessage != null) ...[
               const SizedBox(height: AppSpacing.lg),

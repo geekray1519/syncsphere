@@ -325,10 +325,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterTitle => 'Filter Settings';
 
   @override
-  String get filterInclude => 'Include Patterns';
+  String get filterInclude => 'Include';
 
   @override
-  String get filterExclude => 'Exclude Patterns';
+  String get filterExclude => 'Exclude';
 
   @override
   String get filterIncludeHint => 'e.g., *.jpg | *.png | Documents\\';
@@ -689,10 +689,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sharedFolders => 'Shared Folders';
 
   @override
+  String get noSharedFolders => 'No shared folders';
+
+  @override
   String get statistics => 'Statistics';
 
   @override
+  String get status => 'Status';
+
+  @override
   String get removeDeviceConfirm => 'Remove this device?';
+
+  @override
+  String get actionCannotBeUndone => 'This action cannot be undone.';
 
   @override
   String get settingsSync => 'Sync';
@@ -755,7 +764,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get disableBatteryOptimization => 'Disable Battery Optimization';
 
   @override
-  String get syncCompleteNotification => 'Sync complete notifications';
+  String get syncCompleteNotification => 'Sync Complete';
 
   @override
   String get errorNotification => 'Error notifications';
@@ -824,6 +833,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncFilters => 'Filters';
 
   @override
+  String get forceRescan => 'Force Rescan';
+
+  @override
   String get noFilters => 'No filters';
 
   @override
@@ -858,6 +870,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get licenses => 'Licenses';
+
+  @override
+  String get sourceCode => 'Source Code';
 
   @override
   String get privacyPolicy => 'Privacy Policy';

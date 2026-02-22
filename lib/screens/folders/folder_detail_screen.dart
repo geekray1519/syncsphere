@@ -5,6 +5,7 @@ import 'package:syncsphere/models/sync_job.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/theme/app_spacing.dart';
 import 'package:syncsphere/models/sync_result.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Folder detail — individual folder settings and sync info.
 class FolderDetailScreen extends StatelessWidget {
@@ -51,6 +52,7 @@ class FolderDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final SyncProvider syncProvider = context.watch<SyncProvider>();
 
     // Try to get latest state from provider
@@ -82,13 +84,13 @@ class FolderDetailScreen extends StatelessWidget {
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'edit',
-                child: Text('編集'),
+                child: Text(l10n.edit),
               ),
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'delete',
-                child: Text('削除', style: TextStyle(color: Colors.red)),
+                child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
               ),
             ],
           ),
@@ -205,7 +207,7 @@ class FolderDetailScreen extends StatelessWidget {
                     // Start comparison only
                   },
                   icon: const Icon(Icons.compare_arrows_rounded),
-                  label: const Text('比較'),
+                  label: Text(l10n.compareFiles),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),

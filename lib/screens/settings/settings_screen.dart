@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/premium_provider.dart';
 import '../../theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,7 +16,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   // Local state for mocked features
-  String _defaultSyncMode = 'ミラー';
+  String _defaultSyncMode = 'mirror';
   double _downloadLimit = 0.0;
   bool _wifiOnly = true;
   bool _chargingOnly = false;
@@ -29,11 +30,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        title: const Text('設定', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(l10n.tabSettings, style: const TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: Consumer2<SettingsProvider, PremiumProvider>(
@@ -47,10 +49,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _SettingsEntry(
                     label: 'テーマ',
                     valueWidget: SegmentedButton<ThemeMode>(
-                      segments: const [
-                        ButtonSegment(value: ThemeMode.system, label: Text('システム')),
-                        ButtonSegment(value: ThemeMode.light, label: Text('ライト')),
-                        ButtonSegment(value: ThemeMode.dark, label: Text('ダーク')),
+                      segments: [
+                        ButtonSegment(value: ThemeMode.system, label: Text(l10n.themeSystem)),
+                        ButtonSegment(value: ThemeMode.light, label: Text(l10n.themeLight)),
+                        ButtonSegment(value: ThemeMode.dark, label: Text(l10n.themeDark)),
                       ],
                       selected: {settings.themeMode},
                       onSelectionChanged: (Set<ThemeMode> selection) {
@@ -84,11 +86,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     valueWidget: DropdownButton<String>(
                       value: _defaultSyncMode,
                       underline: const SizedBox(),
-                      items: const [
-                        DropdownMenuItem(value: 'ミラー', child: Text('ミラー')),
-                        DropdownMenuItem(value: '双方向', child: Text('双方向')),
-                        DropdownMenuItem(value: '更新', child: Text('更新')),
-                        DropdownMenuItem(value: 'カスタム', child: Text('カスタム')),
+                      items: [
+                        DropdownMenuItem(value: 'mirror', child: Text(l10n.syncModeMirror)),
+                        DropdownMenuItem(value: 'twoWay', child: Text(l10n.syncModeTwoWay)),
+                        DropdownMenuItem(value: 'update', child: Text(l10n.syncModeUpdate)),
+                        DropdownMenuItem(value: 'custom', child: Text(l10n.syncModeCustom)),
                       ],
                       onChanged: (value) {
                         if (value != null) {
@@ -149,7 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: '実行条件',
                 children: [
                   SwitchListTile(
-                    title: const Text('WiFiのみで同期'),
+                    title: Text(l10n.wifiOnlySync),
                     value: _wifiOnly,
                     onChanged: (value) {
                       setState(() => _wifiOnly = value);
@@ -158,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
-                    title: const Text('充電中のみで同期'),
+                    title: Text(l10n.chargingOnlySync),
                     value: _chargingOnly,
                     onChanged: (value) {
                       setState(() => _chargingOnly = value);
@@ -166,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
-                    title: const Text('省電力モードOFF時のみ'),
+                    title: Text(l10n.batterySaverOff),
                     value: _powerSaveOffOnly,
                     onChanged: (value) {
                       setState(() => _powerSaveOffOnly = value);
@@ -178,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('許可されたSSID', style: TextStyle(fontWeight: FontWeight.w600)),
+                        Text(l10n.allowedSsids, style: const TextStyle(fontWeight: FontWeight.w600)),
                         const Gap(AppSpacing.sm),
                         Wrap(
                           spacing: AppSpacing.sm,
@@ -191,7 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               },
                             )),
                             ActionChip(
-                              label: const Text('追加'),
+                              label: Text(l10n.addSsid),
                               avatar: const Icon(Icons.add, size: 16),
                               onPressed: () {
                                 _showAddSsidSheet(context);
@@ -210,7 +212,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: 'バックグラウンド',
                 children: [
                   SwitchListTile(
-                    title: const Text('バックグラウンド同期'),
+                    title: Text(l10n.backgroundSync),
                     value: _backgroundSync,
                     onChanged: (value) {
                       setState(() => _backgroundSync = value);
@@ -218,7 +220,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
-                    title: const Text('起動時に自動開始'),
+                    title: Text(l10n.autoStartOnBoot),
                     value: _autoStart,
                     onChanged: (value) {
                       setState(() => _autoStart = value);
@@ -226,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    title: const Text('バッテリー最適化を無効化', style: TextStyle(color: Colors.blue)),
+                    title: Text(l10n.disableBatteryOptimization, style: const TextStyle(color: Colors.blue)),
                     onTap: () {
                       // Mock open Android battery settings
                       debugPrint('Open battery settings intent');
@@ -240,7 +242,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: '通知',
                 children: [
                   SwitchListTile(
-                    title: const Text('同期完了'),
+                    title: Text(l10n.syncCompleteNotification),
                     value: settings.notificationsEnabled,
                     onChanged: (value) {
                       settings.setNotificationsEnabled(value);
@@ -248,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
-                    title: const Text('エラー通知'),
+                    title: Text(l10n.errorNotification),
                     value: _errorNotifications,
                     onChanged: (value) {
                       setState(() => _errorNotifications = value);
@@ -256,7 +258,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
-                    title: const Text('新しいデバイス検出'),
+                    title: Text(l10n.newDeviceNotification),
                     value: _newDeviceNotifications,
                     onChanged: (value) {
                       setState(() => _newDeviceNotifications = value);
@@ -270,13 +272,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: 'バックアップ',
                 children: [
                   ListTile(
-                    title: const Text('設定をエクスポート'),
+                    title: Text(l10n.exportConfig),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {},
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    title: const Text('設定をインポート'),
+                    title: Text(l10n.importConfig),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {},
                   ),
@@ -289,7 +291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   ListTile(
                     leading: Icon(Icons.workspace_premium, color: theme.colorScheme.primary),
-                    title: const Text('ステータス', style: TextStyle(fontWeight: FontWeight.w600)),
+                    title: Text(l10n.status, style: const TextStyle(fontWeight: FontWeight.w600)),
                     trailing: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
@@ -308,7 +310,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   if (!premium.isPremium) ...[
                     const Divider(height: 1),
                     ListTile(
-                      title: Text('プレミアムにアップグレード', style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
+                      title: Text(l10n.upgradePremium, style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
                       trailing: const Icon(Icons.arrow_forward),
                       onTap: () {
                         Navigator.pushNamed(context, '/premium');
@@ -317,7 +319,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                   const Divider(height: 1),
                   ListTile(
-                    title: Text('購入を復元', style: TextStyle(color: theme.colorScheme.primary)),
+                    title: Text(l10n.restorePurchases, style: TextStyle(color: theme.colorScheme.primary)),
                     onTap: () {
                       premium.restorePurchases();
                     },
@@ -329,13 +331,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _SettingsSection(
                 title: 'このアプリについて',
                 children: [
-                  const ListTile(
-                    title: Text('バージョン'),
+                  ListTile(
+                    title: Text(l10n.version),
                     trailing: Text('1.0.0'),
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    title: const Text('ライセンス'),
+                    title: Text(l10n.licenses),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
                       showLicensePage(context: context);
@@ -343,7 +345,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    title: const Text('ソースコード'),
+                    title: Text(l10n.sourceCode),
                     trailing: const Icon(Icons.open_in_new, size: 20),
                     onTap: () {},
                   ),
@@ -358,6 +360,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showAddSsidSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -374,7 +377,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('SSIDを追加', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(l10n.addSsid, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const Gap(AppSpacing.lg),
               TextField(
                 controller: textController,
@@ -395,7 +398,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('追加'),
+                child: Text(l10n.addSsid),
               ),
               const Gap(AppSpacing.xl),
             ],

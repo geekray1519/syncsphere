@@ -6,6 +6,7 @@ import '../../models/device_info.dart';
 import '../../providers/device_provider.dart';
 import '../../providers/sync_provider.dart';
 import '../../theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
 
 class DeviceDetailScreen extends StatelessWidget {
   const DeviceDetailScreen({super.key, required this.device});
@@ -15,6 +16,7 @@ class DeviceDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -39,7 +41,7 @@ class DeviceDetailScreen extends StatelessWidget {
                     Icon(Icons.delete_outline, color: theme.colorScheme.error),
                     const Gap(AppSpacing.sm),
                     Text(
-                      'デバイスを削除',
+                      l10n.removeDevice,
                       style: TextStyle(
                         color: theme.colorScheme.error,
                         fontWeight: FontWeight.w600,
@@ -113,10 +115,10 @@ class DeviceDetailScreen extends StatelessWidget {
                   }).toList();
 
                   if (sharedJobs.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.all(AppSpacing.lg),
+                    return Padding(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
                       child: Center(
-                        child: Text('共有フォルダはありません'),
+                        child: Text(l10n.noSharedFolders),
                       ),
                     );
                   }
@@ -164,7 +166,7 @@ class DeviceDetailScreen extends StatelessWidget {
               foregroundColor: theme.colorScheme.error,
               side: BorderSide(color: theme.colorScheme.error),
             ),
-            child: const Text('デバイスを削除', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(l10n.removeDevice, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -172,15 +174,16 @@ class DeviceDetailScreen extends StatelessWidget {
   }
 
   void _confirmRemoveDevice(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('デバイスの削除'),
-        content: Text('${device.name} を削除してもよろしいですか？\nこの操作は取り消せません。'),
+        title: Text(l10n.removeDevice),
+        content: Text('${device.name} ${l10n.removeDeviceConfirm}\n${l10n.actionCannotBeUndone}'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -192,7 +195,7 @@ class DeviceDetailScreen extends StatelessWidget {
               backgroundColor: Theme.of(context).colorScheme.error,
               foregroundColor: Theme.of(context).colorScheme.onError,
             ),
-            child: const Text('削除'),
+            child: Text(l10n.delete),
           ),
         ],
       ),

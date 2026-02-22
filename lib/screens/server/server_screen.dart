@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../providers/server_provider.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_theme.dart';
@@ -35,6 +36,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final serverProvider = context.watch<ServerProvider>();
+    final l10n = AppLocalizations.of(context)!;
     final isRunning = serverProvider.isRunning;
     final url = serverProvider.serverUrl;
     final clients = serverProvider.connectedClients;
@@ -50,7 +52,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: const Text('PC同期'),
+        title: Text(l10n.serverTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
@@ -167,6 +169,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     BuildContext context,
   ) {
     if (url == null) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       children: [
@@ -231,7 +234,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
                         Clipboard.setData(ClipboardData(text: url));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('URLをコピーしました'),
+                            content: Text(l10n.serverUrlCopied),
                             backgroundColor: colorScheme.primary,
                             behavior: SnackBarBehavior.floating,
                           ),

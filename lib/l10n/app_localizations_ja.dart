@@ -244,7 +244,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get deviceConnecting => '接続中...';
 
   @override
-  String get compareFiles => 'ファイルを比較';
+  String get compareFiles => '比較';
 
   @override
   String get comparing => '比較中...';
@@ -319,10 +319,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get filterTitle => 'フィルタ設定';
 
   @override
-  String get filterInclude => '含めるパターン';
+  String get filterInclude => '含める';
 
   @override
-  String get filterExclude => '除外するパターン';
+  String get filterExclude => '除外する';
 
   @override
   String get filterIncludeHint => '例: *.jpg | *.png | Documents\\';
@@ -676,10 +676,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sharedFolders => '共有フォルダ';
 
   @override
+  String get noSharedFolders => '共有フォルダはありません';
+
+  @override
   String get statistics => '統計';
 
   @override
+  String get status => 'ステータス';
+
+  @override
   String get removeDeviceConfirm => 'このデバイスを削除しますか？';
+
+  @override
+  String get actionCannotBeUndone => 'この操作は取り消せません。';
 
   @override
   String get settingsSync => '同期';
@@ -742,7 +751,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get disableBatteryOptimization => 'バッテリー最適化を無効化';
 
   @override
-  String get syncCompleteNotification => '同期完了通知';
+  String get syncCompleteNotification => '同期完了';
 
   @override
   String get errorNotification => 'エラー通知';
@@ -811,6 +820,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get syncFilters => 'フィルタ';
 
   @override
+  String get forceRescan => '強制再スキャン';
+
+  @override
   String get noFilters => 'フィルタなし';
 
   @override
@@ -845,6 +857,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get licenses => 'ライセンス';
+
+  @override
+  String get sourceCode => 'ソースコード';
 
   @override
   String get privacyPolicy => 'プライバシーポリシー';
