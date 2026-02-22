@@ -1,6 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:gap/gap.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/settings_provider.dart';
 import '../../providers/premium_provider.dart';
@@ -211,9 +219,13 @@ class SettingsScreen extends StatelessWidget {
                   const Divider(height: 1),
                   ListTile(
                     title: Text(l10n.disableBatteryOptimization, style: TextStyle(color: theme.colorScheme.primary)),
-                    onTap: () {
-                      // Mock open Android battery settings
-                      debugPrint('Open battery settings intent');
+                    onTap: () async {
+                      final status = await Permission.ignoreBatteryOptimizations.request();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(status.isGranted ? l10n.settingsSaved : l10n.permissionDenied)),
+                        );
+                      }
                     },
                   ),
                 ],
@@ -256,13 +268,13 @@ class SettingsScreen extends StatelessWidget {
                   ListTile(
                     title: Text(l10n.exportConfig),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {},
+                    onTap: () => _exportConfig(context, settings, l10n),
                   ),
                   const Divider(height: 1),
                   ListTile(
                     title: Text(l10n.importConfig),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {},
+                    onTap: () => _importConfig(context, settings, l10n),
                   ),
                 ],
               ),
@@ -329,7 +341,10 @@ class SettingsScreen extends StatelessWidget {
                   ListTile(
                     title: Text(l10n.sourceCode),
                     trailing: const Icon(Icons.open_in_new, size: 20),
-                    onTap: () {},
+                    onTap: () => launchUrl(
+                      Uri.parse('https://github.com/geekray1519/syncsphere'),
+                      mode: LaunchMode.externalApplication,
+                    ),
                   ),
                 ],
               ),
@@ -339,6 +354,92 @@ class SettingsScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> _exportConfig(
+    BuildContext context,
+    SettingsProvider settings,
+    AppLocalizations l10n,
+  ) async {
+    try {
+      final Map<String, dynamic> jsonMap = settings.exportConfigToJson();
+      final String prettyJson = const JsonEncoder.withIndent('  ').convert(jsonMap);
+      final Directory outputDirectory = await _resolveConfigDirectory();
+      await outputDirectory.create(recursive: true);
+
+      final String timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+      final String filePath = p.join(outputDirectory.path, 'syncsphere_config_$timestamp.json');
+      final File configFile = File(filePath);
+      await configFile.writeAsString(prettyJson);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${l10n.exportConfig}: ${configFile.path}')),
+        );
+      }
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${l10n.errorGeneral}: $error')),
+        );
+      }
+    }
+  }
+
+  Future<void> _importConfig(
+    BuildContext context,
+    SettingsProvider settings,
+    AppLocalizations l10n,
+  ) async {
+    try {
+      final FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: const <String>['json'],
+      );
+
+      if (result == null) {
+        return;
+      }
+
+      final String? pickedFilePath = result.files.single.path;
+      if (pickedFilePath == null) {
+        throw const FormatException('Selected file path is unavailable.');
+      }
+
+      final String jsonContent = await File(pickedFilePath).readAsString();
+      final dynamic decoded = jsonDecode(jsonContent);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException('Invalid config format.');
+      }
+
+      await settings.importConfigFromJson(decoded);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${l10n.importConfig}: ${l10n.done}')),
+        );
+      }
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${l10n.errorGeneral}: $error')),
+        );
+      }
+    }
+  }
+
+  Future<Directory> _resolveConfigDirectory() async {
+    final Directory? downloadsDirectory = await getDownloadsDirectory();
+    if (downloadsDirectory != null) {
+      return downloadsDirectory;
+    }
+
+    final Directory? externalStorageDirectory = await getExternalStorageDirectory();
+    if (externalStorageDirectory != null) {
+      return externalStorageDirectory;
+    }
+
+    return getApplicationDocumentsDirectory();
   }
 
   void _showAddSsidSheet(BuildContext context, SettingsProvider settings) {

@@ -92,7 +92,10 @@ class FolderDetailScreen extends StatelessWidget {
               ),
               PopupMenuItem<String>(
                 value: 'delete',
-                child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+                child: Text(
+                  l10n.delete,
+                  style: TextStyle(color: colorScheme.error),
+                ),
               ),
             ],
           ),

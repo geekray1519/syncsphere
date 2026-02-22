@@ -757,6 +757,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get disableBatteryOptimization => 'バッテリー最適化を無効化';
 
   @override
+  String get settingsSaved => '設定を保存しました';
+
+  @override
+  String get permissionDenied => '権限が拒否されました';
+
+  @override
   String get syncCompleteNotification => '同期完了';
 
   @override

@@ -328,7 +328,9 @@ class SyncDetailScreen extends StatelessWidget {
                 ),
                 Icon(
                   result.errors > 0 ? Icons.error_rounded : Icons.check_circle_rounded,
-                  color: result.errors > 0 ? colorScheme.error : Colors.green,
+                  color: result.errors > 0
+                      ? colorScheme.error
+                      : colorScheme.primary,
                 ),
               ],
             ),
@@ -337,10 +339,10 @@ class SyncDetailScreen extends StatelessWidget {
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,
               children: [
-                _buildStatChip(l10n.copied, result.filesCopied.toString(), Colors.blue, colorScheme),
-                _buildStatChip(l10n.deleted, result.filesDeleted.toString(), Colors.red, colorScheme),
-                _buildStatChip(l10n.skipped, result.filesSkipped.toString(), Colors.grey, colorScheme),
-                _buildStatChip(l10n.conflicts, result.conflicts.toString(), Colors.orange, colorScheme),
+                _buildStatChip(l10n.copied, result.filesCopied.toString(), colorScheme.primary, colorScheme),
+                _buildStatChip(l10n.deleted, result.filesDeleted.toString(), colorScheme.error, colorScheme),
+                _buildStatChip(l10n.skipped, result.filesSkipped.toString(), colorScheme.outline, colorScheme),
+                _buildStatChip(l10n.conflicts, result.conflicts.toString(), colorScheme.tertiary, colorScheme),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
@@ -407,7 +409,7 @@ class SyncDetailScreen extends StatelessWidget {
         color: colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(10),
+            color: colorScheme.onSurface.withAlpha(10),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),

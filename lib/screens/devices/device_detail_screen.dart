@@ -70,14 +70,18 @@ class DeviceDetailScreen extends StatelessWidget {
                       height: 8,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: device.isOnline ? Colors.green : theme.colorScheme.error,
+                        color: device.isOnline
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.error,
                       ),
                     ),
                     const Gap(AppSpacing.xs),
                     Text(
                       device.isOnline ? l10n.deviceOnline : l10n.deviceOffline,
                       style: TextStyle(
-                        color: device.isOnline ? Colors.green : theme.colorScheme.error,
+                        color: device.isOnline
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.error,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -134,7 +138,11 @@ class DeviceDetailScreen extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         trailing: const Icon(Icons.chevron_right),
-                        onTap: () {},
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/folder-detail',
+                          arguments: job,
+                        ),
                       );
                     }).toList(),
                   );

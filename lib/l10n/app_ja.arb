@@ -279,6 +279,8 @@
   "backgroundSync": "バックグラウンド同期",
   "autoStartOnBoot": "起動時に自動開始",
   "disableBatteryOptimization": "バッテリー最適化を無効化",
+  "settingsSaved": "設定を保存しました",
+  "permissionDenied": "権限が拒否されました",
   "syncCompleteNotification": "同期完了",
   "errorNotification": "エラー通知",
   "newDeviceNotification": "新しいデバイス検出",

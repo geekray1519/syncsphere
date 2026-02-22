@@ -243,6 +243,110 @@ class SettingsProvider extends ChangeNotifier {
     await _preferences.setBool(_newDeviceNotificationsKey, enabled);
   }
 
+  Map<String, dynamic> exportConfigToJson() {
+    return toJson();
+  }
+
+  Future<void> importConfigFromJson(Map<String, dynamic> json) async {
+    await importFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'themeMode': _themeMode.index,
+      'locale': _locale.languageCode,
+      'bandwidthLimit': _bandwidthLimit,
+      'notificationsEnabled': _notificationsEnabled,
+      'defaultSyncMode': _defaultSyncMode,
+      'downloadBandwidthLimit': _downloadBandwidthLimit,
+      'wifiOnlySync': _wifiOnlySync,
+      'chargingOnlySync': _chargingOnlySync,
+      'powerSaveOffOnly': _powerSaveOffOnly,
+      'allowedSsids': _allowedSsids,
+      'backgroundSync': _backgroundSync,
+      'autoStartOnBoot': _autoStartOnBoot,
+      'errorNotifications': _errorNotifications,
+      'newDeviceNotifications': _newDeviceNotifications,
+    };
+  }
+
+  Future<void> importFromJson(Map<String, dynamic> json) async {
+    final dynamic themeModeValue = json['themeMode'];
+    if (themeModeValue is int &&
+        themeModeValue >= 0 &&
+        themeModeValue < ThemeMode.values.length) {
+      await setThemeMode(ThemeMode.values[themeModeValue]);
+    }
+
+    final dynamic localeValue = json['locale'];
+    if (localeValue is String && localeValue.isNotEmpty) {
+      await setLocale(Locale(localeValue));
+    }
+
+    final dynamic bandwidthLimitValue = json['bandwidthLimit'];
+    if (bandwidthLimitValue is num) {
+      await setBandwidthLimit(bandwidthLimitValue.toDouble());
+    }
+
+    final dynamic notificationsEnabledValue = json['notificationsEnabled'];
+    if (notificationsEnabledValue is bool) {
+      await setNotificationsEnabled(notificationsEnabledValue);
+    }
+
+    final dynamic defaultSyncModeValue = json['defaultSyncMode'];
+    if (defaultSyncModeValue is String) {
+      await setDefaultSyncMode(defaultSyncModeValue);
+    }
+
+    final dynamic downloadBandwidthLimitValue = json['downloadBandwidthLimit'];
+    if (downloadBandwidthLimitValue is num) {
+      await setDownloadBandwidthLimit(downloadBandwidthLimitValue.toDouble());
+    }
+
+    final dynamic wifiOnlySyncValue = json['wifiOnlySync'];
+    if (wifiOnlySyncValue is bool) {
+      await setWifiOnlySync(wifiOnlySyncValue);
+    }
+
+    final dynamic chargingOnlySyncValue = json['chargingOnlySync'];
+    if (chargingOnlySyncValue is bool) {
+      await setChargingOnlySync(chargingOnlySyncValue);
+    }
+
+    final dynamic powerSaveOffOnlyValue = json['powerSaveOffOnly'];
+    if (powerSaveOffOnlyValue is bool) {
+      await setPowerSaveOffOnly(powerSaveOffOnlyValue);
+    }
+
+    final dynamic allowedSsidsValue = json['allowedSsids'];
+    if (allowedSsidsValue is List<dynamic>) {
+      final List<String> ssids = allowedSsidsValue.whereType<String>().toList();
+      _allowedSsids = ssids;
+      await _preferences.setStringList(_allowedSsidsKey, ssids);
+      notifyListeners();
+    }
+
+    final dynamic backgroundSyncValue = json['backgroundSync'];
+    if (backgroundSyncValue is bool) {
+      await setBackgroundSync(backgroundSyncValue);
+    }
+
+    final dynamic autoStartOnBootValue = json['autoStartOnBoot'];
+    if (autoStartOnBootValue is bool) {
+      await setAutoStartOnBoot(autoStartOnBootValue);
+    }
+
+    final dynamic errorNotificationsValue = json['errorNotifications'];
+    if (errorNotificationsValue is bool) {
+      await setErrorNotifications(errorNotificationsValue);
+    }
+
+    final dynamic newDeviceNotificationsValue = json['newDeviceNotifications'];
+    if (newDeviceNotificationsValue is bool) {
+      await setNewDeviceNotifications(newDeviceNotificationsValue);
+    }
+  }
+
   ThemeMode _themeModeFromString(String? rawValue, {required ThemeMode fallback}) {
     if (rawValue == null) {
       return fallback;

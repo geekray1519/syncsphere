@@ -86,7 +86,7 @@ class DevicesScreen extends StatelessWidget {
                 if (onlineDevices.isNotEmpty) ...[
                   _SectionHeader(
                     title: l10n.deviceOnline,
-                    color: Colors.green,
+                    color: theme.colorScheme.primary,
                   ),
                   const Gap(AppSpacing.sm),
                   ...onlineDevices.map((d) => _DeviceCard(device: d)),
@@ -170,7 +170,9 @@ class _DeviceCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final isOnline = device.isOnline;
-    final badgeColor = isOnline ? Colors.green : theme.colorScheme.outline;
+    final badgeColor = isOnline
+        ? theme.colorScheme.primary
+        : theme.colorScheme.outline;
 
     final String lastSeenText = device.lastSeen != null
         ? '${device.lastSeen!.year}/${device.lastSeen!.month.toString().padLeft(2, '0')}/${device.lastSeen!.day.toString().padLeft(2, '0')} ${device.lastSeen!.hour.toString().padLeft(2, '0')}:${device.lastSeen!.minute.toString().padLeft(2, '0')}'

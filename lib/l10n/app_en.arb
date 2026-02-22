@@ -277,6 +277,8 @@
   "backgroundSync": "Background Sync",
   "autoStartOnBoot": "Auto start on boot",
   "disableBatteryOptimization": "Disable Battery Optimization",
+  "settingsSaved": "Settings saved",
+  "permissionDenied": "Permission denied",
   "syncCompleteNotification": "Sync Complete",
   "errorNotification": "Error notifications",
   "newDeviceNotification": "New device notifications",

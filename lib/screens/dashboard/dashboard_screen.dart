@@ -7,7 +7,9 @@ import 'package:syncsphere/theme/app_spacing.dart';
 import 'package:syncsphere/widgets/ad_banner_widget.dart';
 import 'package:syncsphere/widgets/empty_state_widget.dart';
 import 'package:syncsphere/widgets/sync_job_card.dart';
+
 import '../../l10n/app_localizations.dart';
+import '../shell/app_shell.dart';
 
 /// Dashboard — main overview screen (tab 0 in AppShell).
 class DashboardScreen extends StatelessWidget {
@@ -85,9 +87,7 @@ class DashboardScreen extends StatelessWidget {
                     ActionChip(
                       avatar: const Icon(Icons.qr_code_scanner_rounded, size: 18),
                       label: Text(l10n.quickActionAddDevice),
-                      onPressed: () {
-                        // Normally navigates to devices tab or scanner
-                      },
+                      onPressed: () => AppShellController.of(context)?.switchToTab(2),
                     ),
                   ],
                 ),

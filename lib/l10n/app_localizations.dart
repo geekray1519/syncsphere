@@ -1586,6 +1586,18 @@ abstract class AppLocalizations {
   /// **'バッテリー最適化を無効化'**
   String get disableBatteryOptimization;
 
+  /// No description provided for @settingsSaved.
+  ///
+  /// In ja, this message translates to:
+  /// **'設定を保存しました'**
+  String get settingsSaved;
+
+  /// No description provided for @permissionDenied.
+  ///
+  /// In ja, this message translates to:
+  /// **'権限が拒否されました'**
+  String get permissionDenied;
+
   /// No description provided for @syncCompleteNotification.
   ///
   /// In ja, this message translates to:

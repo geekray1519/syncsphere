@@ -770,6 +770,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get disableBatteryOptimization => 'Disable Battery Optimization';
 
   @override
+  String get settingsSaved => 'Settings saved';
+
+  @override
+  String get permissionDenied => 'Permission denied';
+
+  @override
   String get syncCompleteNotification => 'Sync Complete';
 
   @override
