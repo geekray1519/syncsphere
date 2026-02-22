@@ -9,6 +9,7 @@ import 'providers/run_conditions_provider.dart';
 import 'providers/device_provider.dart';
 import 'providers/premium_provider.dart';
 import 'providers/server_provider.dart';
+import 'services/storage_service.dart';
 import 'l10n/app_localizations.dart';
 import 'app.dart';
 
@@ -26,23 +27,17 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<SyncProvider>(
-          create: (_) => SyncProvider(),
+          create: (_) => SyncProvider(StorageService()),
         ),
-        ChangeNotifierProvider<SettingsProvider>.value(
-          value: settingsProvider,
-        ),
+        ChangeNotifierProvider<SettingsProvider>.value(value: settingsProvider),
         ChangeNotifierProvider<RunConditionsProvider>(
           create: (_) => RunConditionsProvider(preferences),
         ),
         ChangeNotifierProvider<DeviceProvider>(
-          create: (_) => DeviceProvider(),
+          create: (_) => DeviceProvider(StorageService()),
         ),
-        ChangeNotifierProvider<PremiumProvider>.value(
-          value: premiumProvider,
-        ),
-        ChangeNotifierProvider<ServerProvider>(
-          create: (_) => ServerProvider(),
-        ),
+        ChangeNotifierProvider<PremiumProvider>.value(value: premiumProvider),
+        ChangeNotifierProvider<ServerProvider>(create: (_) => ServerProvider()),
       ],
       child: SyncSphereApp(
         supportedLocales: AppLocalizations.supportedLocales,

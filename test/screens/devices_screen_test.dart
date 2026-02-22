@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncsphere/providers/device_provider.dart';
 import 'package:syncsphere/screens/devices/devices_screen.dart';
+import 'package:syncsphere/services/storage_service.dart';
 
 import '../helpers/test_data.dart';
 import '../helpers/test_helpers.dart';
@@ -46,7 +47,9 @@ void main() {
       of: manualAddInSheet,
       matching: find.byType(InkWell),
     );
-    final InkWell manualAddCard = tester.widget<InkWell>(manualAddInkWell.first);
+    final InkWell manualAddCard = tester.widget<InkWell>(
+      manualAddInkWell.first,
+    );
     manualAddCard.onTap?.call();
     await tester.pump(const Duration(seconds: 1));
 
@@ -57,7 +60,7 @@ void main() {
   testWidgets('shows online and offline sections with device data', (
     WidgetTester tester,
   ) async {
-    final DeviceProvider deviceProvider = DeviceProvider();
+    final DeviceProvider deviceProvider = DeviceProvider(StorageService());
     deviceProvider.setDevices(createTestDeviceList());
 
     await pumpTestScreen(
@@ -77,7 +80,7 @@ void main() {
   testWidgets('scrolls list when many devices are available', (
     WidgetTester tester,
   ) async {
-    final DeviceProvider deviceProvider = DeviceProvider();
+    final DeviceProvider deviceProvider = DeviceProvider(StorageService());
     final List devices = List.generate(15, (int i) {
       return createTestDeviceInfo(
         id: 'device-$i',
@@ -115,11 +118,7 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     providers.deviceProvider.addOrUpdateDevice(
-      createTestDeviceInfo(
-        id: 'new-device',
-        name: '新規デバイス',
-        isOnline: true,
-      ),
+      createTestDeviceInfo(id: 'new-device', name: '新規デバイス', isOnline: true),
     );
     await tester.pump(const Duration(seconds: 1));
 

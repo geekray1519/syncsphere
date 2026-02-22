@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:syncsphere/providers/device_provider.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/screens/dashboard/dashboard_screen.dart';
+import 'package:syncsphere/services/storage_service.dart';
 import 'package:syncsphere/widgets/sync_job_card.dart';
 
 import '../helpers/test_data.dart';
@@ -36,8 +37,9 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pump();
 
-    final SyncProvider syncProvider = SyncProvider();
-    final DeviceProvider deviceProvider = DeviceProvider();
+    final StorageService storageService = StorageService();
+    final SyncProvider syncProvider = SyncProvider(storageService);
+    final DeviceProvider deviceProvider = DeviceProvider(storageService);
     for (final job in createTestSyncJobs(6)) {
       syncProvider.addJob(job);
     }
@@ -58,7 +60,9 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
   });
 
-  testWidgets('add-device action chip is tappable', (WidgetTester tester) async {
+  testWidgets('add-device action chip is tappable', (
+    WidgetTester tester,
+  ) async {
     await pumpTestScreen(tester, const DashboardScreen(), settle: false);
     await tester.pump(const Duration(seconds: 1));
 
@@ -75,7 +79,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(400, 600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     for (final job in createTestSyncJobs(5)) {
       syncProvider.addJob(job);
     }

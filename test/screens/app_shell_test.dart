@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/screens/shell/app_shell.dart';
+import 'package:syncsphere/services/storage_service.dart';
 
 import '../helpers/test_data.dart';
 import '../helpers/test_helpers.dart';
@@ -86,7 +87,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pump();
 
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     syncProvider.addJob(createTestSyncJob(name: '維持されるジョブ'));
 
     await pumpTestScreen(
@@ -118,7 +119,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pump();
 
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     for (final job in createTestSyncJobs(5)) {
       syncProvider.addJob(job);
     }

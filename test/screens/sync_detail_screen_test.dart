@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/screens/sync/sync_detail_screen.dart';
+import 'package:syncsphere/services/storage_service.dart';
 
 import '../helpers/test_data.dart';
 import '../helpers/test_helpers.dart';
@@ -19,7 +20,9 @@ void main() {
   });
 
   group('SyncDetailScreen', () {
-    testWidgets('renders summary, folders, filter, and action bar', (WidgetTester tester) async {
+    testWidgets('renders summary, folders, filter, and action bar', (
+      WidgetTester tester,
+    ) async {
       await _setMobileSurface(tester);
 
       final job = createTestSyncJob(
@@ -29,10 +32,12 @@ void main() {
         targetPath: '/backup/photos',
         isActive: false,
       );
-      final syncProvider = SyncProvider()..addJob(job);
+      final syncProvider = SyncProvider(StorageService())..addJob(job);
       final providers = await createTestProviders(syncProvider: syncProvider);
 
-      await tester.pumpWidget(buildTestApp(providers, SyncDetailScreen(job: job)));
+      await tester.pumpWidget(
+        buildTestApp(providers, SyncDetailScreen(job: job)),
+      );
       await tester.pump(const Duration(seconds: 1));
 
       expect(find.text('写真バックアップ'), findsOneWidget);
@@ -47,7 +52,9 @@ void main() {
       expect(find.text('/backup/photos'), findsOneWidget);
     });
 
-    testWidgets('shows include/exclude filters and opens popup menu', (WidgetTester tester) async {
+    testWidgets('shows include/exclude filters and opens popup menu', (
+      WidgetTester tester,
+    ) async {
       await _setMobileSurface(tester);
 
       final job = createTestSyncJob(
@@ -57,10 +64,12 @@ void main() {
         filterInclude: const <String>['*.dart', '*.yaml'],
         filterExclude: const <String>['build/', '.dart_tool/'],
       );
-      final syncProvider = SyncProvider()..addJob(job);
+      final syncProvider = SyncProvider(StorageService())..addJob(job);
       final providers = await createTestProviders(syncProvider: syncProvider);
 
-      await tester.pumpWidget(buildTestApp(providers, SyncDetailScreen(job: job)));
+      await tester.pumpWidget(
+        buildTestApp(providers, SyncDetailScreen(job: job)),
+      );
       await tester.pump(const Duration(seconds: 1));
 
       expect(find.text('含める:'), findsOneWidget);
@@ -76,7 +85,9 @@ void main() {
       expect(find.text('削除'), findsOneWidget);
     });
 
-    testWidgets('start sync button updates provider state', (WidgetTester tester) async {
+    testWidgets('start sync button updates provider state', (
+      WidgetTester tester,
+    ) async {
       await _setMobileSurface(tester);
 
       final job = createTestSyncJob(
@@ -84,10 +95,12 @@ void main() {
         name: 'ドキュメント同期',
         isActive: false,
       );
-      final syncProvider = SyncProvider()..addJob(job);
+      final syncProvider = SyncProvider(StorageService())..addJob(job);
       final providers = await createTestProviders(syncProvider: syncProvider);
 
-      await tester.pumpWidget(buildTestApp(providers, SyncDetailScreen(job: job)));
+      await tester.pumpWidget(
+        buildTestApp(providers, SyncDetailScreen(job: job)),
+      );
       await tester.pump(const Duration(seconds: 1));
 
       await tester.tap(find.text('同期開始'));

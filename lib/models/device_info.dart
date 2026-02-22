@@ -103,4 +103,16 @@ class DeviceInfo {
     }
     return fallback;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is DeviceInfo && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() => 'DeviceInfo(id: $id, name: $name)';
 }

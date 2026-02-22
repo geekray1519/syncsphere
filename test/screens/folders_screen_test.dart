@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/screens/folders/folders_screen.dart';
+import 'package:syncsphere/services/storage_service.dart';
 import 'package:syncsphere/widgets/sync_job_card.dart';
 
 import '../helpers/test_data.dart';
@@ -29,7 +30,7 @@ void main() {
   testWidgets('renders sync job cards when folders exist', (
     WidgetTester tester,
   ) async {
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     syncProvider.addJob(createTestSyncJob(name: 'テスト同期ジョブ'));
     syncProvider.addJob(createTestSyncJob(id: 'job-2', name: '追加ジョブ'));
 
@@ -60,8 +61,10 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
   });
 
-  testWidgets('list scrolls with many folder jobs', (WidgetTester tester) async {
-    final SyncProvider syncProvider = SyncProvider();
+  testWidgets('list scrolls with many folder jobs', (
+    WidgetTester tester,
+  ) async {
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     for (final job in createTestSyncJobs(12)) {
       syncProvider.addJob(job);
     }

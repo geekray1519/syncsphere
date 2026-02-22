@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/screens/sync/sync_progress_screen.dart';
+import 'package:syncsphere/services/storage_service.dart';
 
 import '../helpers/test_data.dart';
 import '../helpers/test_helpers.dart';
@@ -16,7 +17,7 @@ void main() {
   testWidgets('renders progress screen with zero progress', (
     WidgetTester tester,
   ) async {
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     syncProvider.addJob(createTestSyncJob(id: 'progress-job'));
 
     final TestProviders providers = await createTestProviders(
@@ -35,7 +36,7 @@ void main() {
   testWidgets('shows stats card with file, speed, and time labels', (
     WidgetTester tester,
   ) async {
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     syncProvider.addJob(createTestSyncJob(id: 'stats-job'));
 
     final TestProviders providers = await createTestProviders(
@@ -51,10 +52,8 @@ void main() {
     expect(find.text('残り時間'), findsOneWidget);
   });
 
-  testWidgets('shows expandable details section', (
-    WidgetTester tester,
-  ) async {
-    final SyncProvider syncProvider = SyncProvider();
+  testWidgets('shows expandable details section', (WidgetTester tester) async {
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     syncProvider.addJob(createTestSyncJob(id: 'expand-job'));
 
     final TestProviders providers = await createTestProviders(
@@ -78,7 +77,7 @@ void main() {
   testWidgets('cancel button is present and tappable', (
     WidgetTester tester,
   ) async {
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     syncProvider.addJob(createTestSyncJob(id: 'cancel-job'));
     syncProvider.startSync('cancel-job');
 
@@ -103,7 +102,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(400, 500));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final SyncProvider syncProvider = SyncProvider();
+    final SyncProvider syncProvider = SyncProvider(StorageService());
     syncProvider.addJob(createTestSyncJob(id: 'scroll-job'));
 
     final TestProviders providers = await createTestProviders(

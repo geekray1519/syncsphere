@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +10,7 @@ import 'package:syncsphere/providers/device_provider.dart';
 import 'package:syncsphere/providers/settings_provider.dart';
 import 'package:syncsphere/providers/premium_provider.dart';
 import 'package:syncsphere/providers/server_provider.dart';
+import 'package:syncsphere/services/storage_service.dart';
 import 'package:syncsphere/theme/app_theme.dart';
 
 /// Container holding all providers used in test widget trees.
@@ -48,10 +48,11 @@ Future<TestProviders> createTestProviders({
 }) async {
   SharedPreferences.setMockInitialValues(prefsValues ?? <String, Object>{});
   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final StorageService storageService = StorageService();
 
   return TestProviders(
-    syncProvider: syncProvider ?? SyncProvider(),
-    deviceProvider: deviceProvider ?? DeviceProvider(),
+    syncProvider: syncProvider ?? SyncProvider(storageService),
+    deviceProvider: deviceProvider ?? DeviceProvider(storageService),
     settingsProvider: SettingsProvider(prefs),
     premiumProvider: premiumProvider ?? PremiumProvider(),
     serverProvider: serverProvider ?? ServerProvider(),
@@ -62,9 +63,7 @@ Future<TestProviders> createTestProviders({
 Widget buildTestApp(TestProviders providers, Widget child) {
   return MultiProvider(
     providers: [
-      ChangeNotifierProvider<SyncProvider>.value(
-        value: providers.syncProvider,
-      ),
+      ChangeNotifierProvider<SyncProvider>.value(value: providers.syncProvider),
       ChangeNotifierProvider<DeviceProvider>.value(
         value: providers.deviceProvider,
       ),

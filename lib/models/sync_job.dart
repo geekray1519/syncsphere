@@ -108,7 +108,11 @@ class SyncJob {
       name: map['name'] as String? ?? 'Untitled Job',
       sourcePath: map['sourcePath'] as String? ?? '',
       targetPath: map['targetPath'] as String? ?? '',
-      syncMode: _enumFromName(SyncMode.values, map['syncMode'], SyncMode.mirror),
+      syncMode: _enumFromName(
+        SyncMode.values,
+        map['syncMode'],
+        SyncMode.mirror,
+      ),
       compareMode: _enumFromName(
         CompareMode.values,
         map['compareMode'],
@@ -177,4 +181,16 @@ class SyncJob {
     }
     return const <String, bool>{};
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is SyncJob && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() => 'SyncJob(id: $id, name: $name)';
 }

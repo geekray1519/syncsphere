@@ -1,13 +1,20 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 
 import '../models/sync_job.dart';
 import '../models/sync_result.dart';
+import '../services/storage_service.dart';
 
 enum SyncState { idle, running, paused, completed, error }
 
 class SyncProvider extends ChangeNotifier {
+  SyncProvider(this._storageService) {
+    unawaited(_loadSavedJobs());
+  }
+
+  final StorageService _storageService;
   final List<SyncJob> _jobs = <SyncJob>[];
   final List<SyncResult> _history = <SyncResult>[];
 
@@ -16,7 +23,8 @@ class SyncProvider extends ChangeNotifier {
   SyncJob? _currentJob;
   final Set<String> _comparingJobs = <String>{};
 
-  UnmodifiableListView<SyncJob> get jobs => UnmodifiableListView<SyncJob>(_jobs);
+  UnmodifiableListView<SyncJob> get jobs =>
+      UnmodifiableListView<SyncJob>(_jobs);
 
   UnmodifiableListView<SyncJob> get syncJobs => jobs;
 
@@ -28,6 +36,16 @@ class SyncProvider extends ChangeNotifier {
   SyncJob? get currentJob => _currentJob;
 
   bool isComparing(String jobId) => _comparingJobs.contains(jobId);
+
+  Future<void> _loadSavedJobs() async {
+    final List<SyncJob> savedJobs = await _storageService.loadJobs();
+    _jobs.addAll(savedJobs);
+    notifyListeners();
+  }
+
+  Future<void> _persistJobs() async {
+    await _storageService.saveJobs(_jobs);
+  }
 
   Future<void> startComparison(String jobId) async {
     _comparingJobs.add(jobId);
@@ -55,10 +73,13 @@ class SyncProvider extends ChangeNotifier {
     }
     _jobs.add(job);
     notifyListeners();
+    unawaited(_persistJobs());
   }
 
   void updateJob(SyncJob updatedJob) {
-    final int index = _jobs.indexWhere((SyncJob job) => job.id == updatedJob.id);
+    final int index = _jobs.indexWhere(
+      (SyncJob job) => job.id == updatedJob.id,
+    );
     if (index == -1) {
       return;
     }
@@ -67,6 +88,7 @@ class SyncProvider extends ChangeNotifier {
       _currentJob = updatedJob;
     }
     notifyListeners();
+    unawaited(_persistJobs());
   }
 
   void removeJob(String id) {
@@ -77,6 +99,7 @@ class SyncProvider extends ChangeNotifier {
       _progress = 0.0;
     }
     notifyListeners();
+    unawaited(_persistJobs());
   }
 
   void setJobActive(String id, bool isActive) {
@@ -101,6 +124,7 @@ class SyncProvider extends ChangeNotifier {
     _syncState = SyncState.running;
     _progress = 0.0;
     notifyListeners();
+    unawaited(_persistJobs());
   }
 
   void stopSync(String jobId) {
@@ -116,6 +140,7 @@ class SyncProvider extends ChangeNotifier {
     _syncState = SyncState.idle;
     _progress = 0.0;
     notifyListeners();
+    unawaited(_persistJobs());
   }
 
   void pauseSync() {
@@ -144,7 +169,9 @@ class SyncProvider extends ChangeNotifier {
     _syncState = result.errors > 0 ? SyncState.error : SyncState.completed;
     _progress = 1.0;
 
-    final int jobIndex = _jobs.indexWhere((SyncJob job) => job.id == result.jobId);
+    final int jobIndex = _jobs.indexWhere(
+      (SyncJob job) => job.id == result.jobId,
+    );
     if (jobIndex != -1) {
       final SyncJob job = _jobs[jobIndex];
       final SyncJob updatedJob = job.copyWith(
@@ -156,6 +183,7 @@ class SyncProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+    unawaited(_persistJobs());
   }
 
   void failCurrentSync() {
