@@ -420,7 +420,7 @@ class SyncDetailScreen extends StatelessWidget {
           Expanded(
             child: OutlinedButton(
               onPressed: (isSyncing || isComparing) ? null : () {
-                // TODO: trigger comparison
+                provider.startComparison(job.id);
               },
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),

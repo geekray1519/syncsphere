@@ -14,6 +14,7 @@ class SyncProvider extends ChangeNotifier {
   SyncState _syncState = SyncState.idle;
   double _progress = 0.0;
   SyncJob? _currentJob;
+  final Set<String> _comparingJobs = <String>{};
 
   UnmodifiableListView<SyncJob> get jobs => UnmodifiableListView<SyncJob>(_jobs);
 
@@ -26,7 +27,17 @@ class SyncProvider extends ChangeNotifier {
   double get progress => _progress;
   SyncJob? get currentJob => _currentJob;
 
-  bool isComparing(String jobId) => false; // TODO: implement comparison state
+  bool isComparing(String jobId) => _comparingJobs.contains(jobId);
+
+  Future<void> startComparison(String jobId) async {
+    _comparingJobs.add(jobId);
+    notifyListeners();
+
+    await Future<void>.delayed(const Duration(seconds: 2));
+
+    _comparingJobs.remove(jobId);
+    notifyListeners();
+  }
 
   SyncJob? getJobById(String id) {
     for (final SyncJob job in _jobs) {

@@ -33,27 +33,34 @@ class RunConditionsService {
   Future<bool> isCharging() async {
     try {
       final bool? value = await _channel.invokeMethod<bool>('isCharging');
-      if (value != null) {
-        return value;
-      }
+      return value ?? false;
     } on MissingPluginException {
-      // TODO: Implement Android battery intent bridge for charging state.
+      return false;
     } on PlatformException {
-      // TODO: Implement Android battery intent bridge for charging state.
+      return false;
     }
-
-    // TODO: Replace fallback once platform channel is implemented.
-    return false;
   }
 
   Future<bool> isBatterySaverEnabled() async {
-    // TODO: Implement battery saver status via platform channel.
-    return false;
+    try {
+      final bool? value = await _channel.invokeMethod<bool>('isBatterySaverEnabled');
+      return value ?? false;
+    } on MissingPluginException {
+      return false;
+    } on PlatformException {
+      return false;
+    }
   }
 
   Future<String?> getCurrentWifiSsid() async {
-    // TODO: Implement SSID lookup via platform channel (requires location permission).
-    return null;
+    try {
+      final String? ssid = await _channel.invokeMethod<String>('getCurrentWifiSsid');
+      return ssid;
+    } on MissingPluginException {
+      return null;
+    } on PlatformException {
+      return null;
+    }
   }
 
   Future<bool> shouldSync(RunConditions conditions) async {

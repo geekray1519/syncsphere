@@ -36,96 +36,101 @@ class DashboardScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.pagePadding),
-              children: <Widget>[
-                // Sync status summary row
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: _SummaryCard(
-                        title: l10n.tabFolders,
-                        value: totalFolders.toString(),
-                        icon: Icons.folder_rounded,
-                        color: theme.colorScheme.primary,
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await Future<void>.delayed(const Duration(milliseconds: 500));
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(AppSpacing.pagePadding),
+                children: <Widget>[
+                  // Sync status summary row
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: _SummaryCard(
+                          title: l10n.tabFolders,
+                          value: totalFolders.toString(),
+                          icon: Icons.folder_rounded,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: _SummaryCard(
-                        title: l10n.tabDevices,
-                        value: connectedDevices.toString(),
-                        icon: Icons.devices_rounded,
-                        color: theme.colorScheme.secondary,
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: _SummaryCard(
+                          title: l10n.tabDevices,
+                          value: connectedDevices.toString(),
+                          icon: Icons.devices_rounded,
+                          color: theme.colorScheme.secondary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: _SummaryCard(
-                        title: l10n.activeSyncs,
-                        value: activeSyncs.toString(),
-                        icon: Icons.sync_rounded,
-                        color: theme.colorScheme.tertiary,
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: _SummaryCard(
+                          title: l10n.activeSyncs,
+                          value: activeSyncs.toString(),
+                          icon: Icons.sync_rounded,
+                          color: theme.colorScheme.tertiary,
+                        ),
                       ),
-                    ),
-                  ],
-                ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
-                const SizedBox(height: AppSpacing.xl),
+                    ],
+                  ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
+                  const SizedBox(height: AppSpacing.xl),
 
-                // Quick action buttons row
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: <Widget>[
-                    ActionChip(
-                      avatar: const Icon(Icons.create_new_folder_rounded, size: 18),
-                      label: Text(l10n.quickActionAddFolder),
-                      onPressed: () => Navigator.pushNamed(context, '/wizard'),
-                    ),
-                    ActionChip(
-                      avatar: const Icon(Icons.computer_rounded, size: 18),
-                      label: Text(l10n.quickActionPcSync),
-                      onPressed: () => Navigator.pushNamed(context, '/server'),
-                    ),
-                    ActionChip(
-                      avatar: const Icon(Icons.qr_code_scanner_rounded, size: 18),
-                      label: Text(l10n.quickActionAddDevice),
-                      onPressed: () => AppShellController.of(context)?.switchToTab(2),
-                    ),
-                  ],
-                ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
-                const SizedBox(height: AppSpacing.xl),
+                  // Quick action buttons row
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: <Widget>[
+                      ActionChip(
+                        avatar: const Icon(Icons.create_new_folder_rounded, size: 18),
+                        label: Text(l10n.quickActionAddFolder),
+                        onPressed: () => Navigator.pushNamed(context, '/wizard'),
+                      ),
+                      ActionChip(
+                        avatar: const Icon(Icons.computer_rounded, size: 18),
+                        label: Text(l10n.quickActionPcSync),
+                        onPressed: () => Navigator.pushNamed(context, '/server'),
+                      ),
+                      ActionChip(
+                        avatar: const Icon(Icons.qr_code_scanner_rounded, size: 18),
+                        label: Text(l10n.quickActionAddDevice),
+                        onPressed: () => AppShellController.of(context)?.switchToTab(2),
+                      ),
+                    ],
+                  ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
+                  const SizedBox(height: AppSpacing.xl),
 
-                // Recent sync jobs list
-                Text(
-                  l10n.recentSync,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  // Recent sync jobs list
+                  Text(
+                    l10n.recentSync,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                if (syncProvider.jobs.isEmpty)
-                  EmptyStateWidget(
-                    icon: Icons.auto_awesome_motion_rounded,
-                    title: l10n.noFoldersSubtitle,
-                    description: l10n.noFoldersDescription,
-                    actionLabel: l10n.quickActionAddFolder,
-                    onAction: () => Navigator.pushNamed(context, '/wizard'),
-                  )
-                else
-                  ...syncProvider.jobs.take(5).toList().asMap().entries.map((entry) {
-                    final int index = entry.key;
-                    final SyncJob job = entry.value;
-                    return SyncJobCard(
-                      job: job,
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        '/folder-detail',
-                        arguments: job,
-                      ),
-                    ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: (100 * index).ms).slideY(begin: 0.1);
-                  }),
-              ],
+                  const SizedBox(height: AppSpacing.md),
+                  if (syncProvider.jobs.isEmpty)
+                    EmptyStateWidget(
+                      icon: Icons.auto_awesome_motion_rounded,
+                      title: l10n.noFoldersSubtitle,
+                      description: l10n.noFoldersDescription,
+                      actionLabel: l10n.quickActionAddFolder,
+                      onAction: () => Navigator.pushNamed(context, '/wizard'),
+                    )
+                  else
+                    ...syncProvider.jobs.take(5).toList().asMap().entries.map((entry) {
+                      final int index = entry.key;
+                      final SyncJob job = entry.value;
+                      return SyncJobCard(
+                        job: job,
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/folder-detail',
+                          arguments: job,
+                        ),
+                      ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(delay: (100 * index).ms).slideY(begin: 0.1);
+                    }),
+                ],
+              ),
             ),
           ),
           const AdBannerWidget(),
