@@ -7,25 +7,8 @@ import '../../providers/premium_provider.dart';
 import '../../theme/app_spacing.dart';
 import '../../l10n/app_localizations.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
-
-  @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  // Local state for mocked features
-  String _defaultSyncMode = 'mirror';
-  double _downloadLimit = 0.0;
-  bool _wifiOnly = true;
-  bool _chargingOnly = false;
-  bool _powerSaveOffOnly = true;
-  final List<String> _allowedSsids = ['MyHomeNetwork', 'Office_5G'];
-  bool _backgroundSync = true;
-  bool _autoStart = false;
-  bool _errorNotifications = true;
-  bool _newDeviceNotifications = true;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _SettingsEntry(
                     label: l10n.syncModeDefault,
                     valueWidget: DropdownButton<String>(
-                      value: _defaultSyncMode,
+                      value: settings.defaultSyncMode,
                       underline: const SizedBox(),
                       items: [
                         DropdownMenuItem(value: 'mirror', child: Text(l10n.syncModeMirror)),
@@ -94,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                       onChanged: (value) {
                         if (value != null) {
-                          setState(() => _defaultSyncMode = value);
+                          settings.setDefaultSyncMode(value);
                         }
                       },
                     ),
@@ -128,17 +111,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _downloadLimit == 0 ? l10n.settingsUnlimited : '${_downloadLimit.toInt()} KB/s',
+                          settings.downloadBandwidthLimit == 0
+                              ? l10n.settingsUnlimited
+                              : '${settings.downloadBandwidthLimit.toInt()} KB/s',
                           style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
                         ),
                         Slider(
-                          value: _downloadLimit,
+                          value: settings.downloadBandwidthLimit,
                           min: 0,
                           max: 10000,
                           divisions: 100,
-                          onChanged: (value) {
-                            setState(() => _downloadLimit = value);
-                          },
+                          onChanged: (value) => settings.setDownloadBandwidthLimit(value),
                         ),
                       ],
                     ),
@@ -152,26 +135,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   SwitchListTile(
                     title: Text(l10n.wifiOnlySync),
-                    value: _wifiOnly,
+                    value: settings.wifiOnlySync,
                     onChanged: (value) {
-                      setState(() => _wifiOnly = value);
-                      // TODO: Wire to RunConditionsProvider
+                      settings.setWifiOnlySync(value);
                     },
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
                     title: Text(l10n.chargingOnlySync),
-                    value: _chargingOnly,
+                    value: settings.chargingOnlySync,
                     onChanged: (value) {
-                      setState(() => _chargingOnly = value);
+                      settings.setChargingOnlySync(value);
                     },
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
                     title: Text(l10n.batterySaverOff),
-                    value: _powerSaveOffOnly,
+                    value: settings.powerSaveOffOnly,
                     onChanged: (value) {
-                      setState(() => _powerSaveOffOnly = value);
+                      settings.setPowerSaveOffOnly(value);
                     },
                   ),
                   const Divider(height: 1),
@@ -186,17 +168,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           spacing: AppSpacing.sm,
                           runSpacing: AppSpacing.xs,
                           children: [
-                            ..._allowedSsids.map((ssid) => Chip(
+                            ...settings.allowedSsids.map((ssid) => Chip(
                               label: Text(ssid),
                               onDeleted: () {
-                                setState(() => _allowedSsids.remove(ssid));
+                                settings.removeSsid(ssid);
                               },
                             )),
                             ActionChip(
                               label: Text(l10n.addSsid),
                               avatar: const Icon(Icons.add, size: 16),
                               onPressed: () {
-                                _showAddSsidSheet(context);
+                                _showAddSsidSheet(context, settings);
                               },
                             ),
                           ],
@@ -213,17 +195,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   SwitchListTile(
                     title: Text(l10n.backgroundSync),
-                    value: _backgroundSync,
+                    value: settings.backgroundSync,
                     onChanged: (value) {
-                      setState(() => _backgroundSync = value);
+                      settings.setBackgroundSync(value);
                     },
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
                     title: Text(l10n.autoStartOnBoot),
-                    value: _autoStart,
+                    value: settings.autoStartOnBoot,
                     onChanged: (value) {
-                      setState(() => _autoStart = value);
+                      settings.setAutoStartOnBoot(value);
                     },
                   ),
                   const Divider(height: 1),
@@ -251,17 +233,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Divider(height: 1),
                   SwitchListTile(
                     title: Text(l10n.errorNotification),
-                    value: _errorNotifications,
+                    value: settings.errorNotifications,
                     onChanged: (value) {
-                      setState(() => _errorNotifications = value);
+                      settings.setErrorNotifications(value);
                     },
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
                     title: Text(l10n.newDeviceNotification),
-                    value: _newDeviceNotifications,
+                    value: settings.newDeviceNotifications,
                     onChanged: (value) {
-                      setState(() => _newDeviceNotifications = value);
+                      settings.setNewDeviceNotifications(value);
                     },
                   ),
                 ],
@@ -359,7 +341,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showAddSsidSheet(BuildContext context) {
+  void _showAddSsidSheet(BuildContext context, SettingsProvider settings) {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
@@ -388,14 +370,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const Gap(AppSpacing.lg),
               FilledButton(
-                onPressed: () {
+                onPressed: () async {
                   if (textController.text.isNotEmpty) {
-                    setState(() {
-                      if (!_allowedSsids.contains(textController.text)) {
-                        _allowedSsids.add(textController.text);
-                      }
-                    });
-                    Navigator.pop(context);
+                    await settings.addSsid(textController.text);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
                   }
                 },
                 child: Text(l10n.addSsid),

@@ -106,6 +106,8 @@ class DashboardScreen extends StatelessWidget {
                     icon: Icons.auto_awesome_motion_rounded,
                     title: l10n.noFoldersSubtitle,
                     description: l10n.noFoldersDescription,
+                    actionLabel: l10n.quickActionAddFolder,
+                    onAction: () => Navigator.pushNamed(context, '/wizard'),
                   )
                 else
                   ...syncProvider.jobs.take(5).map((SyncJob job) {

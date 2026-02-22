@@ -10,6 +10,18 @@ class SettingsProvider extends ChangeNotifier {
   static const String _localeLanguageCodeKey = 'settings.localeLanguageCode';
   static const String _bandwidthLimitKey = 'settings.bandwidthLimit';
   static const String _notificationsEnabledKey = 'settings.notificationsEnabled';
+  static const String _defaultSyncModeKey = 'settings.defaultSyncMode';
+  static const String _downloadBandwidthLimitKey =
+      'settings.downloadBandwidthLimit';
+  static const String _wifiOnlySyncKey = 'settings.wifiOnlySync';
+  static const String _chargingOnlySyncKey = 'settings.chargingOnlySync';
+  static const String _powerSaveOffOnlyKey = 'settings.powerSaveOffOnly';
+  static const String _allowedSsidsKey = 'settings.allowedSsids';
+  static const String _backgroundSyncKey = 'settings.backgroundSync';
+  static const String _autoStartOnBootKey = 'settings.autoStartOnBoot';
+  static const String _errorNotificationsKey = 'settings.errorNotifications';
+  static const String _newDeviceNotificationsKey =
+      'settings.newDeviceNotifications';
 
   final SharedPreferences _preferences;
 
@@ -17,11 +29,31 @@ class SettingsProvider extends ChangeNotifier {
   Locale _locale = const Locale('ja');
   double _bandwidthLimit = 0.0;
   bool _notificationsEnabled = true;
+  String _defaultSyncMode = 'mirror';
+  double _downloadBandwidthLimit = 0.0;
+  bool _wifiOnlySync = true;
+  bool _chargingOnlySync = false;
+  bool _powerSaveOffOnly = true;
+  List<String> _allowedSsids = <String>['MyHomeNetwork', 'Office_5G'];
+  bool _backgroundSync = true;
+  bool _autoStartOnBoot = false;
+  bool _errorNotifications = true;
+  bool _newDeviceNotifications = true;
 
   ThemeMode get themeMode => _themeMode;
   Locale get locale => _locale;
   double get bandwidthLimit => _bandwidthLimit;
   bool get notificationsEnabled => _notificationsEnabled;
+  String get defaultSyncMode => _defaultSyncMode;
+  double get downloadBandwidthLimit => _downloadBandwidthLimit;
+  bool get wifiOnlySync => _wifiOnlySync;
+  bool get chargingOnlySync => _chargingOnlySync;
+  bool get powerSaveOffOnly => _powerSaveOffOnly;
+  List<String> get allowedSsids => List<String>.unmodifiable(_allowedSsids);
+  bool get backgroundSync => _backgroundSync;
+  bool get autoStartOnBoot => _autoStartOnBoot;
+  bool get errorNotifications => _errorNotifications;
+  bool get newDeviceNotifications => _newDeviceNotifications;
 
   void _loadFromPreferences() {
     _themeMode = _themeModeFromString(
@@ -35,6 +67,19 @@ class SettingsProvider extends ChangeNotifier {
     _bandwidthLimit = _preferences.getDouble(_bandwidthLimitKey) ?? 0.0;
     _notificationsEnabled =
         _preferences.getBool(_notificationsEnabledKey) ?? true;
+    _defaultSyncMode = _preferences.getString(_defaultSyncModeKey) ?? 'mirror';
+    _downloadBandwidthLimit =
+        _preferences.getDouble(_downloadBandwidthLimitKey) ?? 0.0;
+    _wifiOnlySync = _preferences.getBool(_wifiOnlySyncKey) ?? true;
+    _chargingOnlySync = _preferences.getBool(_chargingOnlySyncKey) ?? false;
+    _powerSaveOffOnly = _preferences.getBool(_powerSaveOffOnlyKey) ?? true;
+    _allowedSsids = _preferences.getStringList(_allowedSsidsKey) ??
+        <String>['MyHomeNetwork', 'Office_5G'];
+    _backgroundSync = _preferences.getBool(_backgroundSyncKey) ?? true;
+    _autoStartOnBoot = _preferences.getBool(_autoStartOnBootKey) ?? false;
+    _errorNotifications = _preferences.getBool(_errorNotificationsKey) ?? true;
+    _newDeviceNotifications =
+        _preferences.getBool(_newDeviceNotificationsKey) ?? true;
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
@@ -77,6 +122,127 @@ class SettingsProvider extends ChangeNotifier {
     await _preferences.setBool(_notificationsEnabledKey, enabled);
   }
 
+  Future<void> setDefaultSyncMode(String mode) async {
+    if (_defaultSyncMode == mode) {
+      return;
+    }
+
+    _defaultSyncMode = mode;
+    notifyListeners();
+    await _preferences.setString(_defaultSyncModeKey, mode);
+  }
+
+  Future<void> setDownloadBandwidthLimit(double limit) async {
+    if (limit < 0 || _downloadBandwidthLimit == limit) {
+      return;
+    }
+
+    _downloadBandwidthLimit = limit;
+    notifyListeners();
+    await _preferences.setDouble(_downloadBandwidthLimitKey, limit);
+  }
+
+  Future<void> setWifiOnlySync(bool enabled) async {
+    if (_wifiOnlySync == enabled) {
+      return;
+    }
+
+    _wifiOnlySync = enabled;
+    notifyListeners();
+    await _preferences.setBool(_wifiOnlySyncKey, enabled);
+  }
+
+  Future<void> setChargingOnlySync(bool enabled) async {
+    if (_chargingOnlySync == enabled) {
+      return;
+    }
+
+    _chargingOnlySync = enabled;
+    notifyListeners();
+    await _preferences.setBool(_chargingOnlySyncKey, enabled);
+  }
+
+  Future<void> setPowerSaveOffOnly(bool enabled) async {
+    if (_powerSaveOffOnly == enabled) {
+      return;
+    }
+
+    _powerSaveOffOnly = enabled;
+    notifyListeners();
+    await _preferences.setBool(_powerSaveOffOnlyKey, enabled);
+  }
+
+  Future<void> setAllowedSsids(List<String> ssids) async {
+    if (_areStringListsEqual(_allowedSsids, ssids)) {
+      return;
+    }
+
+    _allowedSsids = List<String>.from(ssids);
+    notifyListeners();
+    await _preferences.setStringList(_allowedSsidsKey, _allowedSsids);
+  }
+
+  Future<void> addSsid(String ssid) async {
+    final String trimmed = ssid.trim();
+    if (trimmed.isEmpty || _allowedSsids.contains(trimmed)) {
+      return;
+    }
+
+    final List<String> nextSsids = List<String>.from(_allowedSsids)
+      ..add(trimmed);
+    await setAllowedSsids(nextSsids);
+  }
+
+  Future<void> removeSsid(String ssid) async {
+    if (!_allowedSsids.contains(ssid)) {
+      return;
+    }
+
+    final List<String> nextSsids = List<String>.from(_allowedSsids)
+      ..remove(ssid);
+    await setAllowedSsids(nextSsids);
+  }
+
+  Future<void> setBackgroundSync(bool enabled) async {
+    if (_backgroundSync == enabled) {
+      return;
+    }
+
+    _backgroundSync = enabled;
+    notifyListeners();
+    await _preferences.setBool(_backgroundSyncKey, enabled);
+  }
+
+  Future<void> setAutoStartOnBoot(bool enabled) async {
+    if (_autoStartOnBoot == enabled) {
+      return;
+    }
+
+    _autoStartOnBoot = enabled;
+    notifyListeners();
+    await _preferences.setBool(_autoStartOnBootKey, enabled);
+  }
+
+  Future<void> setErrorNotifications(bool enabled) async {
+    if (_errorNotifications == enabled) {
+      return;
+    }
+
+    _errorNotifications = enabled;
+    notifyListeners();
+    await _preferences.setBool(_errorNotificationsKey, enabled);
+  }
+
+  Future<void> setNewDeviceNotifications(bool enabled) async {
+    if (_newDeviceNotifications == enabled) {
+      return;
+    }
+
+    _newDeviceNotifications = enabled;
+    notifyListeners();
+    await _preferences.setBool(_newDeviceNotificationsKey, enabled);
+  }
+
   ThemeMode _themeModeFromString(String? rawValue, {required ThemeMode fallback}) {
     if (rawValue == null) {
       return fallback;
@@ -87,5 +253,20 @@ class SettingsProvider extends ChangeNotifier {
       }
     }
     return fallback;
+  }
+
+  bool _areStringListsEqual(List<String> first, List<String> second) {
+    if (identical(first, second)) {
+      return true;
+    }
+    if (first.length != second.length) {
+      return false;
+    }
+    for (int index = 0; index < first.length; index++) {
+      if (first[index] != second[index]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
