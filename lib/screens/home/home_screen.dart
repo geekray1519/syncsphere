@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                                                     Text(
                                                       l10n.directPcSync,
                                                       style: theme.textTheme.bodySmall?.copyWith(
-                                                        color: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
+                                                        color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
                                                       ),
                                                     ),
                                                   ],
@@ -102,7 +102,7 @@ class HomeScreen extends StatelessWidget {
                                               Icon(
                                                 Icons.arrow_forward_ios,
                                                 size: 16,
-                                                color: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
+                                                color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.5),
                                               ),
                                             ],
                                           ),

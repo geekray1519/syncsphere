@@ -228,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    title: Text(l10n.disableBatteryOptimization, style: const TextStyle(color: Colors.blue)),
+                    title: Text(l10n.disableBatteryOptimization, style: TextStyle(color: theme.colorScheme.primary)),
                     onTap: () {
                       // Mock open Android battery settings
                       debugPrint('Open battery settings intent');
