@@ -30,10 +30,10 @@ class FoldersScreen extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height - kToolbarHeight - 100,
-                  child: const EmptyStateWidget(
+                  child: EmptyStateWidget(
                     icon: Icons.folder_open_rounded,
-                    title: 'フォルダがありません',
-                    description: '右下の「＋」ボタンから新しいフォルダを追加してください。',
+                    title: l10n.noFoldersTitle,
+                    description: l10n.noFoldersAction,
                   ),
                 ),
               )

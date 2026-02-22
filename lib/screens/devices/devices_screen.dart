@@ -58,7 +58,7 @@ class DevicesScreen extends StatelessWidget {
                           ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack),
                           const Gap(AppSpacing.xl),
                           Text(
-                            'デバイスを追加してファイルを同期しましょう',
+                            l10n.noDevicesSubtitle,
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.w500,
@@ -84,8 +84,8 @@ class DevicesScreen extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
                 if (onlineDevices.isNotEmpty) ...[
-                  const _SectionHeader(
-                    title: 'オンライン',
+                  _SectionHeader(
+                    title: l10n.deviceOnline,
                     color: Colors.green,
                   ),
                   const Gap(AppSpacing.sm),
@@ -94,7 +94,7 @@ class DevicesScreen extends StatelessWidget {
                 ],
                 if (offlineDevices.isNotEmpty) ...[
                   _SectionHeader(
-                    title: 'オフライン',
+                    title: l10n.deviceOffline,
                     color: theme.colorScheme.outline,
                   ),
                   const Gap(AppSpacing.sm),
@@ -168,12 +168,13 @@ class _DeviceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final isOnline = device.isOnline;
     final badgeColor = isOnline ? Colors.green : theme.colorScheme.outline;
 
     final String lastSeenText = device.lastSeen != null
         ? '${device.lastSeen!.year}/${device.lastSeen!.month.toString().padLeft(2, '0')}/${device.lastSeen!.day.toString().padLeft(2, '0')} ${device.lastSeen!.hour.toString().padLeft(2, '0')}:${device.lastSeen!.minute.toString().padLeft(2, '0')}'
-        : '未接続';
+        : l10n.neverConnected;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -305,7 +306,7 @@ class _AddDeviceSheet extends StatelessWidget {
               Expanded(
                 child: _AddOptionCard(
                   icon: Icons.qr_code_scanner,
-                  label: 'QRスキャン',
+                  label: l10n.scanQrCode,
                   onTap: () {
                     Navigator.pop(context);
                   },
@@ -404,8 +405,8 @@ class _ManualAddDialogState extends State<_ManualAddDialog> {
         children: [
           TextField(
             controller: _addressController,
-            decoration: const InputDecoration(
-              labelText: 'IPアドレス',
+            decoration: InputDecoration(
+              labelText: l10n.ipAddress,
               hintText: '192.168.1.100',
             ),
             keyboardType: TextInputType.url,
@@ -413,8 +414,8 @@ class _ManualAddDialogState extends State<_ManualAddDialog> {
           const Gap(AppSpacing.md),
           TextField(
             controller: _portController,
-            decoration: const InputDecoration(
-              labelText: 'ポート',
+            decoration: InputDecoration(
+              labelText: l10n.port,
             ),
             keyboardType: TextInputType.number,
           ),

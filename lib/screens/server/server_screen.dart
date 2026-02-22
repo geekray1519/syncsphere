@@ -69,7 +69,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
             children: [
               _buildHeroIcon(isRunning, colorScheme),
               const SizedBox(height: AppSpacing.xl),
-              _buildStatusCard(isRunning, colorScheme, theme),
+              _buildStatusCard(isRunning, colorScheme, theme, l10n),
               const SizedBox(height: AppSpacing.xxl),
               AnimatedCrossFade(
                 firstChild: const SizedBox.shrink(),
@@ -78,10 +78,10 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
                 duration: AppSpacing.animNormal,
               ),
               const SizedBox(height: AppSpacing.xxl),
-              _buildToggleButton(isRunning, serverProvider, colorScheme, theme),
+              _buildToggleButton(isRunning, serverProvider, colorScheme, theme, l10n),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'PCにソフトウェアのインストールは不要です',
+                l10n.noInstallRequired,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
@@ -122,9 +122,9 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildStatusCard(bool isRunning, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildStatusCard(bool isRunning, ColorScheme colorScheme, ThemeData theme, AppLocalizations l10n) {
     final statusColor = isRunning ? colorScheme.success : colorScheme.onSurfaceVariant;
-    final statusText = isRunning ? 'サーバー稼働中' : 'サーバー停止中';
+    final statusText = isRunning ? l10n.serverRunning : l10n.serverStopped;
 
     return Center(
       child: Container(
@@ -259,11 +259,11 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildInstructionStep('1', '同じWiFiネットワークに接続してください', theme, colorScheme),
+                _buildInstructionStep('1', l10n.serverInstructions1, theme, colorScheme),
                 const SizedBox(height: AppSpacing.md),
-                _buildInstructionStep('2', 'PCのブラウザで上記URLを開いてください', theme, colorScheme),
+                _buildInstructionStep('2', l10n.serverInstructions2, theme, colorScheme),
                 const SizedBox(height: AppSpacing.md),
-                _buildInstructionStep('3', 'フォルダを選択して同期を開始できます', theme, colorScheme),
+                _buildInstructionStep('3', l10n.serverInstructions3, theme, colorScheme),
               ],
             ),
           ),
@@ -288,7 +288,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                '接続中のクライアント: $clients',
+                l10n.serverConnectedClients(clients),
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: clients > 0 ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.bold,
@@ -336,7 +336,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildToggleButton(bool isRunning, ServerProvider provider, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildToggleButton(bool isRunning, ServerProvider provider, ColorScheme colorScheme, ThemeData theme, AppLocalizations l10n) {
     return ElevatedButton(
       onPressed: () {
         provider.toggleServer(provider.syncDir);
@@ -350,7 +350,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
         ),
       ),
       child: Text(
-        isRunning ? 'サーバーを停止' : 'サーバーを開始',
+        isRunning ? l10n.serverStop : l10n.serverStart,
         style: theme.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.bold,
         ),

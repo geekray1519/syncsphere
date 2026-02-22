@@ -73,14 +73,14 @@ class SyncDetailScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.all(AppSpacing.pagePadding),
                 children: [
-                  _buildSummaryCard(theme, colorScheme),
+                  _buildSummaryCard(theme, colorScheme, l10n),
                   const SizedBox(height: AppSpacing.lg),
-                  _buildFoldersCard(theme, colorScheme),
+                  _buildFoldersCard(theme, colorScheme, l10n),
                   const SizedBox(height: AppSpacing.lg),
                   _buildFilterCard(theme, colorScheme, l10n),
                   if (lastResult != null) ...[
                     const SizedBox(height: AppSpacing.lg),
-                    _buildLastSyncResultCard(lastResult, theme, colorScheme),
+                    _buildLastSyncResultCard(lastResult, theme, colorScheme, l10n),
                   ],
                 ],
               ),
@@ -92,7 +92,42 @@ class SyncDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryCard(ThemeData theme, ColorScheme colorScheme) {
+  String _getSyncModeText(AppLocalizations l10n) {
+    switch (job.syncMode) {
+      case SyncMode.mirror:
+        return l10n.syncModeMirror;
+      case SyncMode.twoWay:
+        return l10n.syncModeTwoWay;
+      case SyncMode.update:
+        return l10n.syncModeUpdate;
+      case SyncMode.custom:
+        return l10n.syncModeCustom;
+    }
+  }
+
+  String _getCompareModeText(AppLocalizations l10n) {
+    switch (job.compareMode) {
+      case CompareMode.timeAndSize:
+        return l10n.compareByTime;
+      case CompareMode.content:
+        return l10n.compareByContent;
+      case CompareMode.sizeOnly:
+        return l10n.compareBySize;
+    }
+  }
+
+  String _getVersioningText(AppLocalizations l10n) {
+    switch (job.versioningType) {
+      case VersioningType.none:
+        return l10n.versioningNone;
+      case VersioningType.trashCan:
+        return l10n.versioningTrashCan;
+      case VersioningType.timestamped:
+        return l10n.versioningTimestamp;
+    }
+  }
+
+  Widget _buildSummaryCard(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Card(
       color: colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(
@@ -104,18 +139,18 @@ class SyncDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '概要',
+              l10n.syncOverview,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            _buildDetailRow(Icons.sync_alt_rounded, '同期モード', job.syncMode.name, theme, colorScheme),
+            _buildDetailRow(Icons.sync_alt_rounded, l10n.syncModeLabel, _getSyncModeText(l10n), theme, colorScheme),
             const SizedBox(height: AppSpacing.sm),
-            _buildDetailRow(Icons.compare_arrows_rounded, '比較モード', job.compareMode.name, theme, colorScheme),
+            _buildDetailRow(Icons.compare_arrows_rounded, l10n.compareModeLabel, _getCompareModeText(l10n), theme, colorScheme),
             const SizedBox(height: AppSpacing.sm),
-            _buildDetailRow(Icons.history_rounded, 'バージョン管理', job.versioningType.name, theme, colorScheme),
+            _buildDetailRow(Icons.history_rounded, l10n.versioningTitle, _getVersioningText(l10n), theme, colorScheme),
             const SizedBox(height: AppSpacing.md),
             Align(
               alignment: Alignment.centerRight,
@@ -129,7 +164,7 @@ class SyncDetailScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  job.isActive ? '実行中' : '待機中',
+                  job.isActive ? l10n.running : l10n.waiting,
                   style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: job.isActive ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
@@ -143,7 +178,7 @@ class SyncDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFoldersCard(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildFoldersCard(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Card(
       color: colorScheme.surfaceContainer,
       shape: RoundedRectangleBorder(
@@ -156,18 +191,18 @@ class SyncDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'フォルダ',
+              l10n.syncFolders,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
-            _buildFolderItem(Icons.folder_shared_rounded, 'ソース', job.sourcePath, theme, colorScheme),
+            _buildFolderItem(Icons.folder_shared_rounded, l10n.source, job.sourcePath, theme, colorScheme),
             Padding(
               padding: const EdgeInsets.only(left: 18.0, top: 8.0, bottom: 8.0),
               child: Icon(Icons.arrow_downward_rounded, size: 20, color: colorScheme.onSurfaceVariant),
             ),
-            _buildFolderItem(Icons.create_new_folder_rounded, 'ターゲット', job.targetPath, theme, colorScheme),
+            _buildFolderItem(Icons.create_new_folder_rounded, l10n.target, job.targetPath, theme, colorScheme),
           ],
         ),
       ),
@@ -219,7 +254,7 @@ class SyncDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'フィルタ',
+              l10n.syncFilters,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -227,7 +262,7 @@ class SyncDetailScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             if (!hasFilters)
               Text(
-                'フィルタなし',
+                l10n.noFilters,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   fontStyle: FontStyle.italic,
@@ -266,7 +301,7 @@ class SyncDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLastSyncResultCard(dynamic lastResultData, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildLastSyncResultCard(dynamic lastResultData, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     final result = lastResultData;
     final duration = result.duration;
     final mins = duration.inMinutes;
@@ -286,7 +321,7 @@ class SyncDetailScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '最後の同期結果',
+                  l10n.lastSyncResult,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -302,15 +337,15 @@ class SyncDetailScreen extends StatelessWidget {
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,
               children: [
-                _buildStatChip('コピー', result.filesCopied.toString(), Colors.blue, colorScheme),
-                _buildStatChip('削除', result.filesDeleted.toString(), Colors.red, colorScheme),
-                _buildStatChip('スキップ', result.filesSkipped.toString(), Colors.grey, colorScheme),
-                _buildStatChip('競合', result.conflicts.toString(), Colors.orange, colorScheme),
+                _buildStatChip(l10n.copied, result.filesCopied.toString(), Colors.blue, colorScheme),
+                _buildStatChip(l10n.deleted, result.filesDeleted.toString(), Colors.red, colorScheme),
+                _buildStatChip(l10n.skipped, result.filesSkipped.toString(), Colors.grey, colorScheme),
+                _buildStatChip(l10n.conflicts, result.conflicts.toString(), Colors.orange, colorScheme),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              '所要時間: ${mins}m ${secs}s',
+              '${l10n.duration}: ${mins}m ${secs}s',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -407,7 +442,7 @@ class SyncDetailScreen extends StatelessWidget {
                 backgroundColor: isSyncing ? colorScheme.error : colorScheme.primary,
                 foregroundColor: isSyncing ? colorScheme.onError : colorScheme.onPrimary,
               ),
-              child: Text(isSyncing ? '停止' : '同期開始'),
+              child: Text(isSyncing ? l10n.stopSyncButton : l10n.startSyncButton),
             ),
           ),
         ],

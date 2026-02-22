@@ -265,6 +265,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get stopSync => '同期を停止';
 
   @override
+  String get startSyncButton => '同期開始';
+
+  @override
+  String get stopSyncButton => '停止';
+
+  @override
   String get pauseSync => '同期を一時停止';
 
   @override
@@ -385,7 +391,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get scheduleRealtime => 'リアルタイム（ファイル変更時に自動同期）';
 
   @override
-  String get settingsGeneral => '一般設定';
+  String get settingsGeneral => '一般';
 
   @override
   String get settingsTheme => 'テーマ';
@@ -566,7 +572,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get premiumRestore => '購入を復元';
 
   @override
-  String get premiumActive => 'プレミアム会員です！';
+  String get premiumActive => 'プレミアム会員です';
 
   @override
   String get premiumActiveDesc => 'すべてのプレミアム機能をご利用いただけます。広告は表示されません。';
@@ -615,7 +621,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String serverConnectedClients(int count) {
-    return '接続中のデバイス: $count';
+    return '接続中のクライアント: $count';
   }
 
   @override
@@ -869,6 +875,101 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get urlCopied => 'URLがクリップボードにコピーされました';
+
+  @override
+  String get activeSyncs => '同期中';
+
+  @override
+  String get recentSync => '最近の同期';
+
+  @override
+  String get noFoldersDescription => 'フォルダ設定を作成し、ファイルを同期します';
+
+  @override
+  String get noFoldersAction => '右下の「＋」ボタンから新しいフォルダを追加してください。';
+
+  @override
+  String get neverConnected => '未接続';
+
+  @override
+  String get ipAddress => 'IPアドレス';
+
+  @override
+  String get port => 'ポート';
+
+  @override
+  String get transferAmount => '転送量';
+
+  @override
+  String get lastConnected => '最終接続';
+
+  @override
+  String get ssidHint => 'WiFiネットワーク名を入力';
+
+  @override
+  String get premiumThankYou => 'SyncSphereをご支援いただきありがとうございます！';
+
+  @override
+  String get basicSync => '基本同期';
+
+  @override
+  String get noAds => '広告なし';
+
+  @override
+  String get fastSync => '高速同期';
+
+  @override
+  String get noAdsComplete => '広告の完全非表示';
+
+  @override
+  String get unlimitedSpeed => '無制限の同期速度';
+
+  @override
+  String get prioritySupport => '優先サポート';
+
+  @override
+  String get syncModeLabel => '同期モード';
+
+  @override
+  String get compareModeLabel => '比較モード';
+
+  @override
+  String get running => '実行中';
+
+  @override
+  String get waiting => '待機中';
+
+  @override
+  String get paths => 'パス';
+
+  @override
+  String get source => 'ソース';
+
+  @override
+  String get target => 'ターゲット';
+
+  @override
+  String get type => '種類';
+
+  @override
+  String get previousResult => '前回の結果';
+
+  @override
+  String get files => 'ファイル';
+
+  @override
+  String aboutMinutes(int min) {
+    return '約 $min分';
+  }
+
+  @override
+  String get preparing => '準備中...';
+
+  @override
+  String get detailedInfo => '詳細情報';
+
+  @override
+  String get directPcSync => 'PCと直接接続して同期';
 
   @override
   String get disableBatteryOptDesc => 'バッテリー最適化を無効にすると、バックグラウンド同期が安定します';

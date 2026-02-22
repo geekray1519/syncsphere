@@ -13,40 +13,42 @@ class FolderDetailScreen extends StatelessWidget {
 
   final SyncJob job;
 
-  String _getSyncModeString(SyncMode mode) {
+  String _getSyncModeString(SyncMode mode, AppLocalizations l10n) {
     switch (mode) {
       case SyncMode.mirror:
-        return 'ミラーリング';
+        return l10n.syncModeMirror;
       case SyncMode.twoWay:
-        return '双方向同期';
+        return l10n.syncModeTwoWay;
       case SyncMode.update:
-        return '更新のみ';
+        return l10n.syncModeUpdate;
       case SyncMode.custom:
-        return 'カスタム';
+        return l10n.syncModeCustom;
     }
   }
 
-  String _getCompareModeString(CompareMode mode) {
+  String _getCompareModeString(CompareMode mode, AppLocalizations l10n) {
     switch (mode) {
       case CompareMode.timeAndSize:
-        return '時刻とサイズ';
+        return l10n.compareByTime;
       case CompareMode.content:
-        return '内容';
+        return l10n.compareByContent;
       case CompareMode.sizeOnly:
-        return 'サイズのみ';
+        return l10n.compareBySize;
     }
   }
 
-  String _getVersioningTypeString(VersioningType type) {
+  String _getVersioningTypeString(VersioningType type, AppLocalizations l10n) {
     switch (type) {
       case VersioningType.none:
-        return 'なし';
+        return l10n.versioningNone;
       case VersioningType.trashCan:
-        return 'ごみ箱';
+        return l10n.versioningTrashCan;
       case VersioningType.timestamped:
-        return 'タイムスタンプ付き';
+        return l10n.versioningTimestamp;
     }
   }
+
+  String _filesCountText(int count, AppLocalizations l10n) => '$count ${l10n.files}';
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class FolderDetailScreen extends StatelessWidget {
 
     final String lastSyncText = currentJob.lastSync != null
         ? DateFormat('yyyy/MM/dd HH:mm:ss').format(currentJob.lastSync!)
-        : '未同期';
+        : l10n.neverSynced;
 
     return Scaffold(
       appBar: AppBar(
@@ -103,25 +105,25 @@ class FolderDetailScreen extends StatelessWidget {
           children: <Widget>[
             // Overview section
             _SectionCard(
-              title: '概要',
+              title: l10n.syncOverview,
               icon: Icons.info_outline_rounded,
               child: Column(
                 children: <Widget>[
                   _DetailRow(
-                    label: '同期モード',
-                    value: _getSyncModeString(currentJob.syncMode),
+                    label: l10n.syncModeLabel,
+                    value: _getSyncModeString(currentJob.syncMode, l10n),
                   ),
                   _DetailRow(
-                    label: '比較モード',
-                    value: _getCompareModeString(currentJob.compareMode),
+                    label: l10n.compareModeLabel,
+                    value: _getCompareModeString(currentJob.compareMode, l10n),
                   ),
                   _DetailRow(
-                    label: '最終同期',
+                    label: l10n.lastSync,
                     value: lastSyncText,
                   ),
                   _DetailRow(
-                    label: 'ステータス',
-                    value: currentJob.isActive ? '同期中' : '待機中',
+                    label: l10n.status,
+                    value: currentJob.isActive ? l10n.running : l10n.waiting,
                     valueColor: currentJob.isActive ? colorScheme.primary : null,
                   ),
                 ],
@@ -131,19 +133,19 @@ class FolderDetailScreen extends StatelessWidget {
 
             // Paths section
             _SectionCard(
-              title: 'パス',
+              title: l10n.paths,
               icon: Icons.folder_shared_outlined,
               child: Column(
                 children: <Widget>[
                   _DetailRow(
-                    label: 'ソース元',
+                    label: l10n.source,
                     value: currentJob.sourcePath,
                     valueFontFamily: 'monospace',
                     icon: Icons.upload_file_rounded,
                   ),
                   const Divider(height: AppSpacing.xl),
                   _DetailRow(
-                    label: 'ターゲット',
+                    label: l10n.target,
                     value: currentJob.targetPath,
                     valueFontFamily: 'monospace',
                     icon: Icons.download_rounded,
@@ -155,11 +157,11 @@ class FolderDetailScreen extends StatelessWidget {
 
             // Versioning section
             _SectionCard(
-              title: 'バージョン管理',
+              title: l10n.versioningTitle,
               icon: Icons.history_edu_rounded,
               child: _DetailRow(
-                label: '種類',
-                value: _getVersioningTypeString(currentJob.versioningType),
+                label: l10n.type,
+                value: _getVersioningTypeString(currentJob.versioningType, l10n),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -167,24 +169,24 @@ class FolderDetailScreen extends StatelessWidget {
             // Last Sync Result
             if (latestResult != null)
               _SectionCard(
-                title: '前回の結果',
+                title: l10n.previousResult,
                 icon: Icons.check_circle_outline_rounded,
                 child: Column(
                   children: <Widget>[
                     _DetailRow(
-                      label: 'コピー済み',
-                      value: '${latestResult.filesCopied} ファイル',
+                      label: l10n.copied,
+                      value: _filesCountText(latestResult.filesCopied, l10n),
                     ),
                     _DetailRow(
-                      label: '削除済み',
-                      value: '${latestResult.filesDeleted} ファイル',
+                      label: l10n.deleted,
+                      value: _filesCountText(latestResult.filesDeleted, l10n),
                     ),
                     _DetailRow(
-                      label: 'スキップ',
-                      value: '${latestResult.filesSkipped} ファイル',
+                      label: l10n.skipped,
+                      value: _filesCountText(latestResult.filesSkipped, l10n),
                     ),
                     _DetailRow(
-                      label: '競合',
+                      label: l10n.conflicts,
                       value: '${latestResult.conflicts}',
                       valueColor: latestResult.conflicts > 0 ? colorScheme.error : null,
                     ),
@@ -223,7 +225,7 @@ class FolderDetailScreen extends StatelessWidget {
                   icon: Icon(
                     currentJob.isActive ? Icons.stop_rounded : Icons.play_arrow_rounded,
                   ),
-                  label: Text(currentJob.isActive ? '停止' : '同期開始'),
+                  label: Text(currentJob.isActive ? l10n.stopSyncButton : l10n.startSyncButton),
                 ),
               ),
             ],

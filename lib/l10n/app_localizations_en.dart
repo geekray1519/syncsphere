@@ -271,6 +271,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stopSync => 'Stop Sync';
 
   @override
+  String get startSyncButton => 'Start Sync';
+
+  @override
+  String get stopSyncButton => 'Stop';
+
+  @override
   String get pauseSync => 'Pause Sync';
 
   @override
@@ -392,7 +398,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scheduleRealtime => 'Real-time (auto-sync on file changes)';
 
   @override
-  String get settingsGeneral => 'General Settings';
+  String get settingsGeneral => 'General';
 
   @override
   String get settingsTheme => 'Theme';
@@ -577,7 +583,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumRestore => 'Restore Purchases';
 
   @override
-  String get premiumActive => 'You\'re a Premium member!';
+  String get premiumActive => 'You\'re a Premium member';
 
   @override
   String get premiumActiveDesc =>
@@ -628,7 +634,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String serverConnectedClients(int count) {
-    return 'Connected devices: $count';
+    return 'Connected clients: $count';
   }
 
   @override
@@ -882,6 +888,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get urlCopied => 'URL copied to clipboard';
+
+  @override
+  String get activeSyncs => 'Active Syncs';
+
+  @override
+  String get recentSync => 'Recent Syncs';
+
+  @override
+  String get noFoldersDescription =>
+      'Create folder settings and sync your files';
+
+  @override
+  String get noFoldersAction =>
+      'Tap the + button in the bottom-right to add a new folder.';
+
+  @override
+  String get neverConnected => 'Never connected';
+
+  @override
+  String get ipAddress => 'IP Address';
+
+  @override
+  String get port => 'Port';
+
+  @override
+  String get transferAmount => 'Transferred';
+
+  @override
+  String get lastConnected => 'Last Connected';
+
+  @override
+  String get ssidHint => 'Enter Wi-Fi network name';
+
+  @override
+  String get premiumThankYou => 'Thank you for supporting SyncSphere!';
+
+  @override
+  String get basicSync => 'Basic sync';
+
+  @override
+  String get noAds => 'No ads';
+
+  @override
+  String get fastSync => 'Fast sync';
+
+  @override
+  String get noAdsComplete => 'Complete ad removal';
+
+  @override
+  String get unlimitedSpeed => 'Unlimited sync speed';
+
+  @override
+  String get prioritySupport => 'Priority support';
+
+  @override
+  String get syncModeLabel => 'Sync Mode';
+
+  @override
+  String get compareModeLabel => 'Compare Mode';
+
+  @override
+  String get running => 'Running';
+
+  @override
+  String get waiting => 'Idle';
+
+  @override
+  String get paths => 'Paths';
+
+  @override
+  String get source => 'Source';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get previousResult => 'Previous Result';
+
+  @override
+  String get files => 'files';
+
+  @override
+  String aboutMinutes(int min) {
+    return '~$min min';
+  }
+
+  @override
+  String get preparing => 'Preparing...';
+
+  @override
+  String get detailedInfo => 'Details';
+
+  @override
+  String get directPcSync => 'Direct sync with your PC';
 
   @override
   String get disableBatteryOptDesc =>

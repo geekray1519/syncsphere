@@ -608,6 +608,18 @@ abstract class AppLocalizations {
   /// **'同期を停止'**
   String get stopSync;
 
+  /// No description provided for @startSyncButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期開始'**
+  String get startSyncButton;
+
+  /// No description provided for @stopSyncButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'停止'**
+  String get stopSyncButton;
+
   /// No description provided for @pauseSync.
   ///
   /// In ja, this message translates to:
@@ -851,7 +863,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsGeneral.
   ///
   /// In ja, this message translates to:
-  /// **'一般設定'**
+  /// **'一般'**
   String get settingsGeneral;
 
   /// No description provided for @settingsTheme.
@@ -1211,7 +1223,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumActive.
   ///
   /// In ja, this message translates to:
-  /// **'プレミアム会員です！'**
+  /// **'プレミアム会員です'**
   String get premiumActive;
 
   /// No description provided for @premiumActiveDesc.
@@ -1307,7 +1319,7 @@ abstract class AppLocalizations {
   /// No description provided for @serverConnectedClients.
   ///
   /// In ja, this message translates to:
-  /// **'接続中のデバイス: {count}'**
+  /// **'接続中のクライアント: {count}'**
   String serverConnectedClients(int count);
 
   /// No description provided for @serverSyncDir.
@@ -1813,6 +1825,192 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'URLがクリップボードにコピーされました'**
   String get urlCopied;
+
+  /// No description provided for @activeSyncs.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期中'**
+  String get activeSyncs;
+
+  /// No description provided for @recentSync.
+  ///
+  /// In ja, this message translates to:
+  /// **'最近の同期'**
+  String get recentSync;
+
+  /// No description provided for @noFoldersDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'フォルダ設定を作成し、ファイルを同期します'**
+  String get noFoldersDescription;
+
+  /// No description provided for @noFoldersAction.
+  ///
+  /// In ja, this message translates to:
+  /// **'右下の「＋」ボタンから新しいフォルダを追加してください。'**
+  String get noFoldersAction;
+
+  /// No description provided for @neverConnected.
+  ///
+  /// In ja, this message translates to:
+  /// **'未接続'**
+  String get neverConnected;
+
+  /// No description provided for @ipAddress.
+  ///
+  /// In ja, this message translates to:
+  /// **'IPアドレス'**
+  String get ipAddress;
+
+  /// No description provided for @port.
+  ///
+  /// In ja, this message translates to:
+  /// **'ポート'**
+  String get port;
+
+  /// No description provided for @transferAmount.
+  ///
+  /// In ja, this message translates to:
+  /// **'転送量'**
+  String get transferAmount;
+
+  /// No description provided for @lastConnected.
+  ///
+  /// In ja, this message translates to:
+  /// **'最終接続'**
+  String get lastConnected;
+
+  /// No description provided for @ssidHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'WiFiネットワーク名を入力'**
+  String get ssidHint;
+
+  /// No description provided for @premiumThankYou.
+  ///
+  /// In ja, this message translates to:
+  /// **'SyncSphereをご支援いただきありがとうございます！'**
+  String get premiumThankYou;
+
+  /// No description provided for @basicSync.
+  ///
+  /// In ja, this message translates to:
+  /// **'基本同期'**
+  String get basicSync;
+
+  /// No description provided for @noAds.
+  ///
+  /// In ja, this message translates to:
+  /// **'広告なし'**
+  String get noAds;
+
+  /// No description provided for @fastSync.
+  ///
+  /// In ja, this message translates to:
+  /// **'高速同期'**
+  String get fastSync;
+
+  /// No description provided for @noAdsComplete.
+  ///
+  /// In ja, this message translates to:
+  /// **'広告の完全非表示'**
+  String get noAdsComplete;
+
+  /// No description provided for @unlimitedSpeed.
+  ///
+  /// In ja, this message translates to:
+  /// **'無制限の同期速度'**
+  String get unlimitedSpeed;
+
+  /// No description provided for @prioritySupport.
+  ///
+  /// In ja, this message translates to:
+  /// **'優先サポート'**
+  String get prioritySupport;
+
+  /// No description provided for @syncModeLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期モード'**
+  String get syncModeLabel;
+
+  /// No description provided for @compareModeLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'比較モード'**
+  String get compareModeLabel;
+
+  /// No description provided for @running.
+  ///
+  /// In ja, this message translates to:
+  /// **'実行中'**
+  String get running;
+
+  /// No description provided for @waiting.
+  ///
+  /// In ja, this message translates to:
+  /// **'待機中'**
+  String get waiting;
+
+  /// No description provided for @paths.
+  ///
+  /// In ja, this message translates to:
+  /// **'パス'**
+  String get paths;
+
+  /// No description provided for @source.
+  ///
+  /// In ja, this message translates to:
+  /// **'ソース'**
+  String get source;
+
+  /// No description provided for @target.
+  ///
+  /// In ja, this message translates to:
+  /// **'ターゲット'**
+  String get target;
+
+  /// No description provided for @type.
+  ///
+  /// In ja, this message translates to:
+  /// **'種類'**
+  String get type;
+
+  /// No description provided for @previousResult.
+  ///
+  /// In ja, this message translates to:
+  /// **'前回の結果'**
+  String get previousResult;
+
+  /// No description provided for @files.
+  ///
+  /// In ja, this message translates to:
+  /// **'ファイル'**
+  String get files;
+
+  /// No description provided for @aboutMinutes.
+  ///
+  /// In ja, this message translates to:
+  /// **'約 {min}分'**
+  String aboutMinutes(int min);
+
+  /// No description provided for @preparing.
+  ///
+  /// In ja, this message translates to:
+  /// **'準備中...'**
+  String get preparing;
+
+  /// No description provided for @detailedInfo.
+  ///
+  /// In ja, this message translates to:
+  /// **'詳細情報'**
+  String get detailedInfo;
+
+  /// No description provided for @directPcSync.
+  ///
+  /// In ja, this message translates to:
+  /// **'PCと直接接続して同期'**
+  String get directPcSync;
 
   /// No description provided for @disableBatteryOptDesc.
   ///

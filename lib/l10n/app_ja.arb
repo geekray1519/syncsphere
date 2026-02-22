@@ -97,6 +97,8 @@
   
   "startSync": "同期を開始",
   "stopSync": "同期を停止",
+  "startSyncButton": "同期開始",
+  "stopSyncButton": "停止",
   "pauseSync": "同期を一時停止",
   "resumeSync": "同期を再開",
   "syncing": "同期中...",
@@ -142,7 +144,7 @@
   "scheduleCustom": "カスタム",
   "scheduleRealtime": "リアルタイム（ファイル変更時に自動同期）",
   
-  "settingsGeneral": "一般設定",
+  "settingsGeneral": "一般",
   "settingsTheme": "テーマ",
   "settingsThemeLight": "ライト",
   "settingsThemeDark": "ダーク",
@@ -209,7 +211,7 @@
   "premiumFeature3": "SyncSphereチームからの迅速なサポート",
   "premiumPurchase": "プレミアムにアップグレード",
   "premiumRestore": "購入を復元",
-  "premiumActive": "プレミアム会員です！",
+  "premiumActive": "プレミアム会員です",
   "premiumActiveDesc": "すべてのプレミアム機能をご利用いただけます。広告は表示されません。",
   "premiumProcessing": "処理中...",
   "premiumError": "エラー",
@@ -225,7 +227,7 @@
   "serverInstruction1": "1. PCのブラウザで下のURLを開いてください",
   "serverInstruction2": "2. または、QRコードをスキャンしてください",
   "serverInstruction3": "3. ブラウザで同期フォルダを選択して同期開始！",
-  "serverConnectedClients": "接続中のデバイス: {count}",
+  "serverConnectedClients": "接続中のクライアント: {count}",
   "@serverConnectedClients": {
     "placeholders": {
       "count": {
@@ -317,5 +319,43 @@
   "privacyPolicy": "プライバシーポリシー",
   "copyUrl": "URLをコピー",
   "urlCopied": "URLがクリップボードにコピーされました",
+  "activeSyncs": "同期中",
+  "recentSync": "最近の同期",
+  "noFoldersDescription": "フォルダ設定を作成し、ファイルを同期します",
+  "noFoldersAction": "右下の「＋」ボタンから新しいフォルダを追加してください。",
+  "neverConnected": "未接続",
+  "ipAddress": "IPアドレス",
+  "port": "ポート",
+  "transferAmount": "転送量",
+  "lastConnected": "最終接続",
+  "ssidHint": "WiFiネットワーク名を入力",
+  "premiumThankYou": "SyncSphereをご支援いただきありがとうございます！",
+  "basicSync": "基本同期",
+  "noAds": "広告なし",
+  "fastSync": "高速同期",
+  "noAdsComplete": "広告の完全非表示",
+  "unlimitedSpeed": "無制限の同期速度",
+  "prioritySupport": "優先サポート",
+  "syncModeLabel": "同期モード",
+  "compareModeLabel": "比較モード",
+  "running": "実行中",
+  "waiting": "待機中",
+  "paths": "パス",
+  "source": "ソース",
+  "target": "ターゲット",
+  "type": "種類",
+  "previousResult": "前回の結果",
+  "files": "ファイル",
+  "aboutMinutes": "約 {min}分",
+  "@aboutMinutes": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "preparing": "準備中...",
+  "detailedInfo": "詳細情報",
+  "directPcSync": "PCと直接接続して同期",
   "disableBatteryOptDesc": "バッテリー最適化を無効にすると、バックグラウンド同期が安定します"
 }

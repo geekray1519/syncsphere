@@ -30,7 +30,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
     final filesDone = (progress * 100).toInt();
     final filesTotal = 100; // Using percentage base
     final speed = progress > 0 ? '${(progress * 10).toStringAsFixed(1)} MB/s' : '---';
-    final timeRemaining = progress > 0 ? '約 ${(100 - filesDone) ~/ 5}分' : '---';
+    final timeRemaining = progress > 0 ? l10n.aboutMinutes((100 - filesDone) ~/ 5) : '---';
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -50,15 +50,15 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
                 horizontal: AppSpacing.pagePadding,
                 vertical: AppSpacing.xxl,
               ),
-              children: [
-                _buildCircularProgress(progress, theme, colorScheme),
-                const SizedBox(height: AppSpacing.xxl),
-                _buildStatsCard(filesDone, filesTotal, speed, timeRemaining, theme, colorScheme),
-                const SizedBox(height: AppSpacing.lg),
-                _buildCurrentFileCard(progress, theme, colorScheme),
-                const SizedBox(height: AppSpacing.lg),
-                _buildExpandableDetails(filesDone, theme, colorScheme),
-                const SizedBox(height: AppSpacing.xxl),
+                children: [
+                  _buildCircularProgress(progress, theme, colorScheme),
+                  const SizedBox(height: AppSpacing.xxl),
+                  _buildStatsCard(filesDone, filesTotal, speed, timeRemaining, theme, colorScheme, l10n),
+                  const SizedBox(height: AppSpacing.lg),
+                  _buildCurrentFileCard(progress, theme, colorScheme, l10n),
+                  const SizedBox(height: AppSpacing.lg),
+                  _buildExpandableDetails(filesDone, theme, colorScheme, l10n),
+                  const SizedBox(height: AppSpacing.xxl),
                 OutlinedButton(
                   onPressed: () {
                     syncProvider.stopSync(widget.jobId);
@@ -114,7 +114,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
     );
   }
 
-  Widget _buildStatsCard(int done, int total, String speed, String time, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildStatsCard(int done, int total, String speed, String time, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Card(
       color: colorScheme.surfaceContainer,
       shape: RoundedRectangleBorder(
@@ -124,11 +124,11 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Row(
           children: [
-            Expanded(child: _buildStatItem('ファイル', '$done / $total 完了', Icons.file_copy_rounded, theme, colorScheme)),
+            Expanded(child: _buildStatItem(l10n.files, '$done / $total ${l10n.filesComplete}', Icons.file_copy_rounded, theme, colorScheme)),
             Container(width: 1, height: 40, color: colorScheme.outlineVariant),
-            Expanded(child: _buildStatItem('速度', speed, Icons.speed_rounded, theme, colorScheme)),
+            Expanded(child: _buildStatItem(l10n.speed, speed, Icons.speed_rounded, theme, colorScheme)),
             Container(width: 1, height: 40, color: colorScheme.outlineVariant),
-            Expanded(child: _buildStatItem('残り時間', time, Icons.timer_rounded, theme, colorScheme)),
+            Expanded(child: _buildStatItem(l10n.timeRemaining, time, Icons.timer_rounded, theme, colorScheme)),
           ],
         ),
       ),
@@ -154,8 +154,8 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
     );
   }
 
-  Widget _buildCurrentFileCard(double progress, ThemeData theme, ColorScheme colorScheme) {
-    final fileName = progress > 0 ? 'syncing_file_${(progress * 100).toInt()}.data' : '準備中...';
+  Widget _buildCurrentFileCard(double progress, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
+    final fileName = progress > 0 ? 'syncing_file_${(progress * 100).toInt()}.data' : l10n.preparing;
     
     return Card(
       color: colorScheme.primaryContainer.withAlpha(50),
@@ -206,7 +206,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
     );
   }
 
-  Widget _buildExpandableDetails(int done, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildExpandableDetails(int done, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Card(
       color: colorScheme.surfaceContainerLowest,
       shape: RoundedRectangleBorder(
@@ -229,7 +229,7 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '詳細情報',
+                    l10n.detailedInfo,
                     style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   Icon(
@@ -242,19 +242,19 @@ class _SyncProgressScreenState extends State<SyncProgressScreen> {
                 firstChild: const SizedBox(height: 0, width: double.infinity),
                 secondChild: Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.lg),
-                  child: Column(
-                    children: [
-                      _buildDetailRow('コピー済み:', '$done ファイル', colorScheme.primary, theme),
-                      const SizedBox(height: AppSpacing.sm),
-                      _buildDetailRow('削除済み:', '0 ファイル', Colors.red, theme),
-                      const SizedBox(height: AppSpacing.sm),
-                      _buildDetailRow('スキップ:', '0 ファイル', Colors.grey, theme),
-                      const SizedBox(height: AppSpacing.sm),
-                      _buildDetailRow('競合:', '0 ファイル', Colors.orange, theme),
-                      const SizedBox(height: AppSpacing.sm),
-                      _buildDetailRow('エラー:', '0', colorScheme.error, theme),
-                    ],
-                  ),
+                    child: Column(
+                      children: [
+                        _buildDetailRow('${l10n.copied}:', '$done ${l10n.files}', colorScheme.primary, theme),
+                        const SizedBox(height: AppSpacing.sm),
+                        _buildDetailRow('${l10n.deleted}:', '0 ${l10n.files}', Colors.red, theme),
+                        const SizedBox(height: AppSpacing.sm),
+                        _buildDetailRow('${l10n.skipped}:', '0 ${l10n.files}', Colors.grey, theme),
+                        const SizedBox(height: AppSpacing.sm),
+                        _buildDetailRow('${l10n.conflicts}:', '0 ${l10n.files}', Colors.orange, theme),
+                        const SizedBox(height: AppSpacing.sm),
+                        _buildDetailRow('${l10n.errors}:', '0', colorScheme.error, theme),
+                      ],
+                    ),
                 ),
                 crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                 duration: AppSpacing.animFast,

@@ -58,10 +58,10 @@ class DeviceDetailScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding, vertical: AppSpacing.xl),
         children: [
           _SettingsSection(
-            title: '接続情報',
+            title: l10n.connectionInfo,
             children: [
               _SettingsEntry(
-                label: 'ステータス',
+                label: l10n.status,
                 valueWidget: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -75,7 +75,7 @@ class DeviceDetailScreen extends StatelessWidget {
                     ),
                     const Gap(AppSpacing.xs),
                     Text(
-                      device.isOnline ? 'オンライン' : 'オフライン',
+                      device.isOnline ? l10n.deviceOnline : l10n.deviceOffline,
                       style: TextStyle(
                         color: device.isOnline ? Colors.green : theme.colorScheme.error,
                         fontWeight: FontWeight.w600,
@@ -86,24 +86,24 @@ class DeviceDetailScreen extends StatelessWidget {
               ),
               const Divider(height: 1),
               _SettingsEntry(
-                label: 'アドレス',
+                label: l10n.ipAddress,
                 valueText: device.address,
               ),
               const Divider(height: 1),
               _SettingsEntry(
-                label: 'ポート',
+                label: l10n.port,
                 valueText: device.port.toString(),
               ),
               const Divider(height: 1),
               _SettingsEntry(
-                label: '接続タイプ',
+                label: l10n.connectionType,
                 valueText: device.connectionType.name.toUpperCase(),
               ),
             ],
           ),
           const Gap(AppSpacing.xxl),
           _SettingsSection(
-            title: '共有フォルダ',
+            title: l10n.sharedFolders,
             children: [
               Consumer<SyncProvider>(
                 builder: (context, syncProvider, child) {
@@ -144,18 +144,18 @@ class DeviceDetailScreen extends StatelessWidget {
           ),
           const Gap(AppSpacing.xxl),
           _SettingsSection(
-            title: '統計',
+            title: l10n.statistics,
             children: [
-              const _SettingsEntry(
-                label: '転送量',
+              _SettingsEntry(
+                label: l10n.transferAmount,
                 valueText: '0 B',
               ),
               const Divider(height: 1),
               _SettingsEntry(
-                label: '最終接続',
+                label: l10n.lastConnected,
                 valueText: device.lastSeen != null
                     ? '${device.lastSeen!.year}/${device.lastSeen!.month.toString().padLeft(2, '0')}/${device.lastSeen!.day.toString().padLeft(2, '0')} ${device.lastSeen!.hour.toString().padLeft(2, '0')}:${device.lastSeen!.minute.toString().padLeft(2, '0')}'
-                    : '未接続',
+                    : l10n.neverConnected,
               ),
             ],
           ),

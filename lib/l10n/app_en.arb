@@ -95,6 +95,8 @@
   
   "startSync": "Start Sync",
   "stopSync": "Stop Sync",
+  "startSyncButton": "Start Sync",
+  "stopSyncButton": "Stop",
   "pauseSync": "Pause Sync",
   "resumeSync": "Resume Sync",
   "syncing": "Syncing...",
@@ -140,7 +142,7 @@
   "scheduleCustom": "Custom",
   "scheduleRealtime": "Real-time (auto-sync on file changes)",
   
-  "settingsGeneral": "General Settings",
+  "settingsGeneral": "General",
   "settingsTheme": "Theme",
   "settingsThemeLight": "Light",
   "settingsThemeDark": "Dark",
@@ -207,7 +209,7 @@
   "premiumFeature3": "Faster help from the SyncSphere team.",
   "premiumPurchase": "Upgrade to Premium",
   "premiumRestore": "Restore Purchases",
-  "premiumActive": "You're a Premium member!",
+  "premiumActive": "You're a Premium member",
   "premiumActiveDesc": "All premium features are unlocked. No ads will be shown.",
   "premiumProcessing": "Processing...",
   "premiumError": "Error",
@@ -223,7 +225,7 @@
   "serverInstruction1": "1. Open the URL below in your PC browser",
   "serverInstruction2": "2. Or scan the QR code",
   "serverInstruction3": "3. Select a sync folder in the browser and start syncing!",
-  "serverConnectedClients": "Connected devices: {count}",
+  "serverConnectedClients": "Connected clients: {count}",
   "@serverConnectedClients": {
     "placeholders": {
       "count": {
@@ -315,5 +317,43 @@
   "privacyPolicy": "Privacy Policy",
   "copyUrl": "Copy URL",
   "urlCopied": "URL copied to clipboard",
+  "activeSyncs": "Active Syncs",
+  "recentSync": "Recent Syncs",
+  "noFoldersDescription": "Create folder settings and sync your files",
+  "noFoldersAction": "Tap the + button in the bottom-right to add a new folder.",
+  "neverConnected": "Never connected",
+  "ipAddress": "IP Address",
+  "port": "Port",
+  "transferAmount": "Transferred",
+  "lastConnected": "Last Connected",
+  "ssidHint": "Enter Wi-Fi network name",
+  "premiumThankYou": "Thank you for supporting SyncSphere!",
+  "basicSync": "Basic sync",
+  "noAds": "No ads",
+  "fastSync": "Fast sync",
+  "noAdsComplete": "Complete ad removal",
+  "unlimitedSpeed": "Unlimited sync speed",
+  "prioritySupport": "Priority support",
+  "syncModeLabel": "Sync Mode",
+  "compareModeLabel": "Compare Mode",
+  "running": "Running",
+  "waiting": "Idle",
+  "paths": "Paths",
+  "source": "Source",
+  "target": "Target",
+  "type": "Type",
+  "previousResult": "Previous Result",
+  "files": "files",
+  "aboutMinutes": "~{min} min",
+  "@aboutMinutes": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "preparing": "Preparing...",
+  "detailedInfo": "Details",
+  "directPcSync": "Direct sync with your PC",
   "disableBatteryOptDesc": "Disabling battery optimization improves background sync reliability"
 }

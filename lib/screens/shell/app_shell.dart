@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_spacing.dart';
 import '../dashboard/dashboard_screen.dart';
@@ -46,32 +47,32 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double width = MediaQuery.sizeOf(context).width;
     final bool isMobile = width < AppSpacing.mobileBreakpoint;
     final bool isDesktop = width >= AppSpacing.desktopBreakpoint;
     final ColorScheme colors = Theme.of(context).colorScheme;
 
-    // Tab definitions — using Japanese labels (production app is JP-first)
-    const List<_TabItem> tabs = <_TabItem>[
+    final List<_TabItem> tabs = <_TabItem>[
       _TabItem(
         icon: Icons.dashboard_outlined,
         selectedIcon: Icons.dashboard_rounded,
-        label: 'ダッシュボード',
+        label: l10n.tabDashboard,
       ),
       _TabItem(
         icon: Icons.folder_outlined,
         selectedIcon: Icons.folder_rounded,
-        label: 'フォルダ',
+        label: l10n.tabFolders,
       ),
       _TabItem(
         icon: Icons.devices_outlined,
         selectedIcon: Icons.devices_rounded,
-        label: 'デバイス',
+        label: l10n.tabDevices,
       ),
       _TabItem(
         icon: Icons.settings_outlined,
         selectedIcon: Icons.settings_rounded,
-        label: '設定',
+        label: l10n.tabSettings,
       ),
     ];
 

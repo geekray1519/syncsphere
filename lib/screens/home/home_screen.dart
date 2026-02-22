@@ -91,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                                                       ),
                                                     ),
                                                     Text(
-                                                      'PCと直接接続して同期',
+                                                      l10n.directPcSync,
                                                       style: theme.textTheme.bodySmall?.copyWith(
                                                         color: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
                                                       ),

@@ -26,13 +26,13 @@ class PremiumScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: premiumProvider.isPremium
-            ? _buildSuccessState(theme, colorScheme)
+            ? _buildSuccessState(theme, colorScheme, l10n)
             : _buildPurchaseState(premiumProvider, theme, colorScheme, l10n),
       ),
     );
   }
 
-  Widget _buildSuccessState(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildSuccessState(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -56,7 +56,7 @@ class PremiumScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xl),
             Text(
-              'プレミアム会員です',
+              l10n.premiumActive,
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class PremiumScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'SyncSphereをご支援いただきありがとうございます！',
+              l10n.premiumThankYou,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -81,11 +81,11 @@ class PremiumScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Column(
                   children: [
-                    _buildBenefitItem(Icons.block_rounded, '広告の完全非表示', theme, colorScheme),
+                    _buildBenefitItem(Icons.block_rounded, l10n.noAdsComplete, theme, colorScheme),
                     const Divider(height: AppSpacing.xl),
-                    _buildBenefitItem(Icons.speed_rounded, '無制限の同期速度', theme, colorScheme),
+                    _buildBenefitItem(Icons.speed_rounded, l10n.unlimitedSpeed, theme, colorScheme),
                     const Divider(height: AppSpacing.xl),
-                    _buildBenefitItem(Icons.support_agent_rounded, '優先サポート', theme, colorScheme),
+                    _buildBenefitItem(Icons.support_agent_rounded, l10n.prioritySupport, theme, colorScheme),
                   ],
                 ),
               ),
@@ -128,7 +128,7 @@ class PremiumScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'SyncSphere プレミアム',
+              l10n.premiumTitle,
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -137,9 +137,9 @@ class PremiumScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.xxl),
             Row(
               children: [
-                Expanded(child: _buildFreePlanCard(theme, colorScheme)),
+                Expanded(child: _buildFreePlanCard(theme, colorScheme, l10n)),
                 const SizedBox(width: AppSpacing.md),
-                Expanded(child: _buildPremiumPlanCard(theme, colorScheme)),
+                Expanded(child: _buildPremiumPlanCard(theme, colorScheme, l10n)),
               ],
             ),
             const SizedBox(height: AppSpacing.xxl),
@@ -153,7 +153,7 @@ class PremiumScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              '一回限りの購入 — サブスクリプションなし',
+              '${l10n.oneTimePurchase} — ${l10n.noSubscription}',
               textAlign: TextAlign.center,
               style: theme.textTheme.labelLarge?.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -197,7 +197,7 @@ class PremiumScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFreePlanCard(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildFreePlanCard(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Card(
       color: colorScheme.surfaceContainerHighest,
       elevation: 0,
@@ -209,25 +209,25 @@ class PremiumScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '無料プラン',
+              l10n.freePlan,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            _buildFeatureRow(Icons.check_rounded, '基本同期', colorScheme.onSurfaceVariant),
+            _buildFeatureRow(Icons.check_rounded, l10n.basicSync, colorScheme.onSurfaceVariant),
             const SizedBox(height: AppSpacing.md),
-            _buildFeatureRow(Icons.close_rounded, '広告なし', colorScheme.onSurfaceVariant),
+            _buildFeatureRow(Icons.close_rounded, l10n.noAds, colorScheme.onSurfaceVariant),
             const SizedBox(height: AppSpacing.md),
-            _buildFeatureRow(Icons.close_rounded, '高速同期', colorScheme.onSurfaceVariant),
+            _buildFeatureRow(Icons.close_rounded, l10n.fastSync, colorScheme.onSurfaceVariant),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPremiumPlanCard(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildPremiumPlanCard(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Card(
       color: colorScheme.primaryContainer,
       elevation: 0,
@@ -240,18 +240,18 @@ class PremiumScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'プレミアムプラン',
+              l10n.premiumPlan,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.primary,
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            _buildFeatureRow(Icons.check_rounded, '基本同期', colorScheme.onPrimaryContainer),
+            _buildFeatureRow(Icons.check_rounded, l10n.basicSync, colorScheme.onPrimaryContainer),
             const SizedBox(height: AppSpacing.md),
-            _buildFeatureRow(Icons.check_rounded, '広告なし', colorScheme.onPrimaryContainer),
+            _buildFeatureRow(Icons.check_rounded, l10n.noAds, colorScheme.onPrimaryContainer),
             const SizedBox(height: AppSpacing.md),
-            _buildFeatureRow(Icons.check_rounded, '高速同期', colorScheme.onPrimaryContainer),
+            _buildFeatureRow(Icons.check_rounded, l10n.fastSync, colorScheme.onPrimaryContainer),
           ],
         ),
       ),

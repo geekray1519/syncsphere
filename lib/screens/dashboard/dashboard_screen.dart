@@ -39,7 +39,7 @@ class DashboardScreen extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: _SummaryCard(
-                        title: 'フォルダ',
+                        title: l10n.tabFolders,
                         value: totalFolders.toString(),
                         icon: Icons.folder_rounded,
                         color: theme.colorScheme.primary,
@@ -48,7 +48,7 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: _SummaryCard(
-                        title: 'デバイス',
+                        title: l10n.tabDevices,
                         value: connectedDevices.toString(),
                         icon: Icons.devices_rounded,
                         color: theme.colorScheme.secondary,
@@ -57,7 +57,7 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: _SummaryCard(
-                        title: '同期中',
+                        title: l10n.activeSyncs,
                         value: activeSyncs.toString(),
                         icon: Icons.sync_rounded,
                         color: theme.colorScheme.tertiary,
@@ -95,7 +95,7 @@ class DashboardScreen extends StatelessWidget {
 
                 // Recent sync jobs list
                 Text(
-                  '最近の同期',
+                  l10n.recentSync,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -104,8 +104,8 @@ class DashboardScreen extends StatelessWidget {
                 if (syncProvider.jobs.isEmpty)
                   EmptyStateWidget(
                     icon: Icons.auto_awesome_motion_rounded,
-                    title: 'フォルダを追加して同期を始めましょう',
-                    description: 'フォルダ設定を作成し、ファイルを同期します',
+                    title: l10n.noFoldersSubtitle,
+                    description: l10n.noFoldersDescription,
                   )
                 else
                   ...syncProvider.jobs.take(5).map((SyncJob job) {

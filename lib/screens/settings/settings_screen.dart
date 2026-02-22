@@ -44,10 +44,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding, vertical: AppSpacing.xl),
             children: [
               _SettingsSection(
-                title: '一般',
+                title: l10n.settingsGeneral,
                 children: [
                   _SettingsEntry(
-                    label: 'テーマ',
+                    label: l10n.settingsTheme,
                     valueWidget: SegmentedButton<ThemeMode>(
                       segments: [
                         ButtonSegment(value: ThemeMode.system, label: Text(l10n.themeSystem)),
@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   _SettingsEntry(
-                    label: '言語',
+                    label: l10n.settingsLanguage,
                     valueWidget: SegmentedButton<Locale>(
                       segments: const [
                         ButtonSegment(value: Locale('ja'), label: Text('日本語')),
@@ -79,10 +79,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
-                title: '同期',
+                title: l10n.settingsSync,
                 children: [
                   _SettingsEntry(
-                    label: 'デフォルト同期モード',
+                    label: l10n.syncModeDefault,
                     valueWidget: DropdownButton<String>(
                       value: _defaultSyncMode,
                       underline: const SizedBox(),
@@ -101,13 +101,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   _SettingsEntry(
-                    label: '帯域制限 (アップロード)',
+                    label: l10n.bandwidthUpload,
                     isVertical: true,
                     valueWidget: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          settings.bandwidthLimit == 0 ? '無制限' : '${settings.bandwidthLimit.toInt()} KB/s',
+                          settings.bandwidthLimit == 0 ? l10n.settingsUnlimited : '${settings.bandwidthLimit.toInt()} KB/s',
                           style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
                         ),
                         Slider(
@@ -122,13 +122,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   _SettingsEntry(
-                    label: '帯域制限 (ダウンロード)',
+                    label: l10n.bandwidthDownload,
                     isVertical: true,
                     valueWidget: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _downloadLimit == 0 ? '無制限' : '${_downloadLimit.toInt()} KB/s',
+                          _downloadLimit == 0 ? l10n.settingsUnlimited : '${_downloadLimit.toInt()} KB/s',
                           style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
                         ),
                         Slider(
@@ -148,7 +148,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
-                title: '実行条件',
+                title: l10n.settingsRunConditions,
                 children: [
                   SwitchListTile(
                     title: Text(l10n.wifiOnlySync),
@@ -209,7 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
-                title: 'バックグラウンド',
+                title: l10n.settingsBackground,
                 children: [
                   SwitchListTile(
                     title: Text(l10n.backgroundSync),
@@ -239,7 +239,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
-                title: '通知',
+                title: l10n.settingsNotifications,
                 children: [
                   SwitchListTile(
                     title: Text(l10n.syncCompleteNotification),
@@ -269,7 +269,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
-                title: 'バックアップ',
+                title: l10n.settingsBackup,
                 children: [
                   ListTile(
                     title: Text(l10n.exportConfig),
@@ -287,7 +287,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
-                title: 'プレミアム',
+                title: l10n.settingsPremium,
                 children: [
                   ListTile(
                     leading: Icon(Icons.workspace_premium, color: theme.colorScheme.primary),
@@ -299,7 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
-                        premium.isPremium ? '会員' : '無料',
+                        premium.isPremium ? l10n.premiumMember : l10n.freePlan,
                         style: TextStyle(
                           color: premium.isPremium ? Colors.amber.shade900 : theme.colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
@@ -329,7 +329,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.xxl),
 
               _SettingsSection(
-                title: 'このアプリについて',
+                title: l10n.settingsAbout,
                 children: [
                   ListTile(
                     title: Text(l10n.version),
@@ -381,8 +381,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Gap(AppSpacing.lg),
               TextField(
                 controller: textController,
-                decoration: const InputDecoration(
-                  hintText: 'WiFiネットワーク名を入力',
+                decoration: InputDecoration(
+                  hintText: l10n.ssidHint,
                 ),
                 autofocus: true,
               ),
