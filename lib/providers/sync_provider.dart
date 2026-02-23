@@ -21,6 +21,7 @@ class SyncProvider extends ChangeNotifier {
   SyncState _syncState = SyncState.idle;
   double _progress = 0.0;
   SyncJob? _currentJob;
+  String? _lastSyncError;
   final Set<String> _comparingJobs = <String>{};
 
   UnmodifiableListView<SyncJob> get jobs =>
@@ -34,6 +35,7 @@ class SyncProvider extends ChangeNotifier {
   SyncState get syncState => _syncState;
   double get progress => _progress;
   SyncJob? get currentJob => _currentJob;
+  String? get lastSyncError => _lastSyncError;
 
   bool isComparing(String jobId) => _comparingJobs.contains(jobId);
 
@@ -123,6 +125,7 @@ class SyncProvider extends ChangeNotifier {
     _currentJob = runningJob;
     _syncState = SyncState.running;
     _progress = 0.0;
+    _lastSyncError = null;
     notifyListeners();
     unawaited(_persistJobs());
   }
@@ -139,6 +142,7 @@ class SyncProvider extends ChangeNotifier {
 
     _syncState = SyncState.idle;
     _progress = 0.0;
+    _lastSyncError = null;
     notifyListeners();
     unawaited(_persistJobs());
   }
@@ -168,6 +172,9 @@ class SyncProvider extends ChangeNotifier {
     _history.insert(0, result);
     _syncState = result.errors > 0 ? SyncState.error : SyncState.completed;
     _progress = 1.0;
+    if (result.errors == 0) {
+      _lastSyncError = null;
+    }
 
     final int jobIndex = _jobs.indexWhere(
       (SyncJob job) => job.id == result.jobId,
@@ -186,8 +193,17 @@ class SyncProvider extends ChangeNotifier {
     unawaited(_persistJobs());
   }
 
-  void failCurrentSync() {
+  void failCurrentSync({String? errorMessage}) {
     _syncState = SyncState.error;
+    _lastSyncError = errorMessage;
+    notifyListeners();
+  }
+
+  void clearSyncError() {
+    if (_lastSyncError == null) {
+      return;
+    }
+    _lastSyncError = null;
     notifyListeners();
   }
 
@@ -195,6 +211,7 @@ class SyncProvider extends ChangeNotifier {
     _syncState = SyncState.idle;
     _progress = 0.0;
     _currentJob = null;
+    _lastSyncError = null;
     notifyListeners();
   }
 }

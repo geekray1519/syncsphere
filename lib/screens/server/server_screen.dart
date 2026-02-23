@@ -15,7 +15,8 @@ class ServerScreen extends StatefulWidget {
   State<ServerScreen> createState() => _ServerScreenState();
 }
 
-class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderStateMixin {
+class _ServerScreenState extends State<ServerScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
 
   @override
@@ -40,6 +41,7 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     final isRunning = serverProvider.isRunning;
     final url = serverProvider.serverUrl;
     final clients = serverProvider.connectedClients;
+    final lastError = serverProvider.lastError;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -71,15 +73,39 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
               _buildHeroIcon(isRunning, colorScheme),
               const SizedBox(height: AppSpacing.xl),
               _buildStatusCard(isRunning, colorScheme, theme, l10n),
+              if (lastError != null) ...[
+                const SizedBox(height: AppSpacing.lg),
+                _buildErrorCard(
+                  lastError,
+                  serverProvider,
+                  colorScheme,
+                  theme,
+                  l10n,
+                ),
+              ],
               const SizedBox(height: AppSpacing.xxl),
               AnimatedCrossFade(
                 firstChild: const SizedBox.shrink(),
-                secondChild: _buildRunningState(url, clients, colorScheme, theme, context),
-                crossFadeState: isRunning ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                secondChild: _buildRunningState(
+                  url,
+                  clients,
+                  colorScheme,
+                  theme,
+                  context,
+                ),
+                crossFadeState: isRunning
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
                 duration: AppSpacing.animNormal,
               ),
               const SizedBox(height: AppSpacing.xxl),
-              _buildToggleButton(isRunning, serverProvider, colorScheme, theme, l10n),
+              _buildToggleButton(
+                isRunning,
+                serverProvider,
+                colorScheme,
+                theme,
+                l10n,
+              ),
               const SizedBox(height: AppSpacing.lg),
               Text(
                 l10n.noInstallRequired,
@@ -111,20 +137,31 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
           padding: const EdgeInsets.all(AppSpacing.xl),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isRunning ? colorScheme.primaryContainer : colorScheme.surfaceContainerHighest,
+            color: isRunning
+                ? colorScheme.primaryContainer
+                : colorScheme.surfaceContainerHighest,
           ),
           child: Icon(
             Icons.computer_rounded,
             size: AppSpacing.iconHero,
-            color: isRunning ? colorScheme.primary : colorScheme.onSurfaceVariant,
+            color: isRunning
+                ? colorScheme.primary
+                : colorScheme.onSurfaceVariant,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildStatusCard(bool isRunning, ColorScheme colorScheme, ThemeData theme, AppLocalizations l10n) {
-    final statusColor = isRunning ? colorScheme.success : colorScheme.onSurfaceVariant;
+  Widget _buildStatusCard(
+    bool isRunning,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    final statusColor = isRunning
+        ? colorScheme.success
+        : colorScheme.onSurfaceVariant;
     final statusText = isRunning ? l10n.serverRunning : l10n.serverStopped;
 
     return Center(
@@ -160,6 +197,58 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorCard(
+    String message,
+    ServerProvider provider,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return Card(
+      color: colorScheme.errorContainer,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.error_outline_rounded,
+                  color: colorScheme.onErrorContainer,
+                  size: AppSpacing.iconSm,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    l10n.serverStartError,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: colorScheme.onErrorContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: provider.clearError,
+                  child: Text(l10n.close),
+                ),
+              ],
+            ),
+            Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onErrorContainer,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -218,7 +307,9 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
                         ),
                         decoration: BoxDecoration(
                           color: colorScheme.surface,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd,
+                          ),
                         ),
                         child: Text(
                           url,
@@ -268,11 +359,26 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildInstructionStep('1', l10n.serverInstructions1, theme, colorScheme),
+                _buildInstructionStep(
+                  '1',
+                  l10n.serverInstructions1,
+                  theme,
+                  colorScheme,
+                ),
                 const SizedBox(height: AppSpacing.md),
-                _buildInstructionStep('2', l10n.serverInstructions2, theme, colorScheme),
+                _buildInstructionStep(
+                  '2',
+                  l10n.serverInstructions2,
+                  theme,
+                  colorScheme,
+                ),
                 const SizedBox(height: AppSpacing.md),
-                _buildInstructionStep('3', l10n.serverInstructions3, theme, colorScheme),
+                _buildInstructionStep(
+                  '3',
+                  l10n.serverInstructions3,
+                  theme,
+                  colorScheme,
+                ),
               ],
             ),
           ),
@@ -284,7 +390,9 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
             vertical: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
-            color: clients > 0 ? colorScheme.primaryContainer : colorScheme.surfaceContainerHighest,
+            color: clients > 0
+                ? colorScheme.primaryContainer
+                : colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           ),
           child: Row(
@@ -292,14 +400,18 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
             children: [
               Icon(
                 Icons.devices_rounded,
-                color: clients > 0 ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+                color: clients > 0
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurfaceVariant,
                 size: AppSpacing.iconSm,
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
                 l10n.serverConnectedClients(clients),
                 style: theme.textTheme.labelLarge?.copyWith(
-                  color: clients > 0 ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+                  color: clients > 0
+                      ? colorScheme.onPrimaryContainer
+                      : colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -310,7 +422,12 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildInstructionStep(String number, String text, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildInstructionStep(
+    String number,
+    String text,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -345,15 +462,25 @@ class _ServerScreenState extends State<ServerScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildToggleButton(bool isRunning, ServerProvider provider, ColorScheme colorScheme, ThemeData theme, AppLocalizations l10n) {
+  Widget _buildToggleButton(
+    bool isRunning,
+    ServerProvider provider,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return ElevatedButton(
       onPressed: () {
         HapticFeedback.mediumImpact();
         provider.toggleServer(provider.syncDir);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: isRunning ? colorScheme.errorContainer : colorScheme.primary,
-        foregroundColor: isRunning ? colorScheme.onErrorContainer : colorScheme.onPrimary,
+        backgroundColor: isRunning
+            ? colorScheme.errorContainer
+            : colorScheme.primary,
+        foregroundColor: isRunning
+            ? colorScheme.onErrorContainer
+            : colorScheme.onPrimary,
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),

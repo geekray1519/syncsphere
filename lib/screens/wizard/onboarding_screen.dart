@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:syncsphere/l10n/app_localizations.dart';
+import 'package:syncsphere/providers/settings_provider.dart';
 import 'package:syncsphere/theme/app_spacing.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -37,6 +39,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     } on PlatformException {
       await openAppSettings();
     }
+  }
+
+  Future<void> _completeOnboardingAndExit() async {
+    await context.read<SettingsProvider>().completeOnboarding();
+    if (!mounted) {
+      return;
+    }
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   @override
@@ -83,13 +93,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             Align(
               alignment: Alignment.topRight,
-                child: Padding(
+              child: Padding(
                 padding: const EdgeInsets.only(
                   top: AppSpacing.lg,
                   right: AppSpacing.lg,
                 ),
                 child: TextButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+                  onPressed: _completeOnboardingAndExit,
                   child: Text(
                     l10n.skip,
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
@@ -136,35 +146,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   FilledButton(
-                    onPressed: () {
-                      if (_currentIndex == pages.length - 1) {
-                        Navigator.pushReplacementNamed(context, '/');
-                      } else {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeOutCubic,
-                        );
-                      }
-                    },
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.xxl,
-                        vertical: AppSpacing.lg,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                      ),
-                    ),
-                    child: Text(
-                      _currentIndex == pages.length - 1
-                          ? l10n.getStarted
-                          : l10n.next,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ).animate(target: _currentIndex == pages.length - 1 ? 1 : 0).scale(
-                    duration: 300.ms,
-                    curve: Curves.easeOutBack,
-                  ),
+                        onPressed: () {
+                          if (_currentIndex == pages.length - 1) {
+                            _completeOnboardingAndExit();
+                          } else {
+                            _pageController.nextPage(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeOutCubic,
+                            );
+                          }
+                        },
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.xxl,
+                            vertical: AppSpacing.lg,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusLg,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          _currentIndex == pages.length - 1
+                              ? l10n.getStarted
+                              : l10n.next,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                      .animate(
+                        target: _currentIndex == pages.length - 1 ? 1 : 0,
+                      )
+                      .scale(duration: 300.ms, curve: Curves.easeOutBack),
                 ],
               ),
             ),
@@ -200,71 +213,79 @@ class _OnboardingPage extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xxxl),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.xxxl + AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: AppSpacing.iconHero + AppSpacing.xxl,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-          const Gap(AppSpacing.xxxl + AppSpacing.xl),
-          Text(
-            title,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-              letterSpacing: -0.5,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const Gap(AppSpacing.xl),
-          Text(
-            description,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              height: 1.6,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          if (actionLabel != null && onActionPressed != null) ...<Widget>[
-            const Gap(AppSpacing.xxl),
-            OutlinedButton.icon(
-              onPressed: onActionPressed,
-              icon: const Icon(Icons.battery_saver_rounded),
-              label: Text(actionLabel!),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xl,
-                  vertical: AppSpacing.lg,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                ),
-              ),
-            ),
-            if (actionDescription != null) ...<Widget>[
-              const Gap(AppSpacing.md),
-              Text(
-                actionDescription!,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ],
-        ]
-            .animate(interval: 120.ms)
-            .fadeIn(duration: 450.ms)
-            .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic)
-            .toList(),
+        children:
+            <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(
+                      AppSpacing.xxxl + AppSpacing.sm,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer.withValues(
+                        alpha: 0.5,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      icon,
+                      size: AppSpacing.iconHero + AppSpacing.xxl,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  const Gap(AppSpacing.xxxl + AppSpacing.xl),
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      letterSpacing: -0.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Gap(AppSpacing.xl),
+                  Text(
+                    description,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      height: 1.6,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  if (actionLabel != null &&
+                      onActionPressed != null) ...<Widget>[
+                    const Gap(AppSpacing.xxl),
+                    OutlinedButton.icon(
+                      onPressed: onActionPressed,
+                      icon: const Icon(Icons.battery_saver_rounded),
+                      label: Text(actionLabel!),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xl,
+                          vertical: AppSpacing.lg,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusLg,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (actionDescription != null) ...<Widget>[
+                      const Gap(AppSpacing.md),
+                      Text(
+                        actionDescription!,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ],
+                ]
+                .animate(interval: 120.ms)
+                .fadeIn(duration: 450.ms)
+                .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic)
+                .toList(),
       ),
     );
   }

@@ -9,7 +9,8 @@ class SettingsProvider extends ChangeNotifier {
   static const String _themeModeKey = 'settings.themeMode';
   static const String _localeLanguageCodeKey = 'settings.localeLanguageCode';
   static const String _bandwidthLimitKey = 'settings.bandwidthLimit';
-  static const String _notificationsEnabledKey = 'settings.notificationsEnabled';
+  static const String _notificationsEnabledKey =
+      'settings.notificationsEnabled';
   static const String _defaultSyncModeKey = 'settings.defaultSyncMode';
   static const String _downloadBandwidthLimitKey =
       'settings.downloadBandwidthLimit';
@@ -22,6 +23,7 @@ class SettingsProvider extends ChangeNotifier {
   static const String _errorNotificationsKey = 'settings.errorNotifications';
   static const String _newDeviceNotificationsKey =
       'settings.newDeviceNotifications';
+  static const String _hasSeenOnboardingKey = 'has_seen_onboarding';
 
   final SharedPreferences _preferences;
 
@@ -39,6 +41,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _autoStartOnBoot = false;
   bool _errorNotifications = true;
   bool _newDeviceNotifications = true;
+  bool _hasSeenOnboarding = false;
 
   ThemeMode get themeMode => _themeMode;
   Locale get locale => _locale;
@@ -54,6 +57,7 @@ class SettingsProvider extends ChangeNotifier {
   bool get autoStartOnBoot => _autoStartOnBoot;
   bool get errorNotifications => _errorNotifications;
   bool get newDeviceNotifications => _newDeviceNotifications;
+  bool get hasSeenOnboarding => _hasSeenOnboarding;
 
   void _loadFromPreferences() {
     _themeMode = _themeModeFromString(
@@ -73,13 +77,15 @@ class SettingsProvider extends ChangeNotifier {
     _wifiOnlySync = _preferences.getBool(_wifiOnlySyncKey) ?? true;
     _chargingOnlySync = _preferences.getBool(_chargingOnlySyncKey) ?? false;
     _powerSaveOffOnly = _preferences.getBool(_powerSaveOffOnlyKey) ?? true;
-    _allowedSsids = _preferences.getStringList(_allowedSsidsKey) ??
+    _allowedSsids =
+        _preferences.getStringList(_allowedSsidsKey) ??
         <String>['MyHomeNetwork', 'Office_5G'];
     _backgroundSync = _preferences.getBool(_backgroundSyncKey) ?? true;
     _autoStartOnBoot = _preferences.getBool(_autoStartOnBootKey) ?? false;
     _errorNotifications = _preferences.getBool(_errorNotificationsKey) ?? true;
     _newDeviceNotifications =
         _preferences.getBool(_newDeviceNotificationsKey) ?? true;
+    _hasSeenOnboarding = _preferences.getBool(_hasSeenOnboardingKey) ?? false;
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
@@ -243,6 +249,16 @@ class SettingsProvider extends ChangeNotifier {
     await _preferences.setBool(_newDeviceNotificationsKey, enabled);
   }
 
+  Future<void> completeOnboarding() async {
+    if (_hasSeenOnboarding) {
+      return;
+    }
+
+    _hasSeenOnboarding = true;
+    notifyListeners();
+    await _preferences.setBool(_hasSeenOnboardingKey, true);
+  }
+
   Map<String, dynamic> exportConfigToJson() {
     return toJson();
   }
@@ -347,7 +363,10 @@ class SettingsProvider extends ChangeNotifier {
     }
   }
 
-  ThemeMode _themeModeFromString(String? rawValue, {required ThemeMode fallback}) {
+  ThemeMode _themeModeFromString(
+    String? rawValue, {
+    required ThemeMode fallback,
+  }) {
     if (rawValue == null) {
       return fallback;
     }

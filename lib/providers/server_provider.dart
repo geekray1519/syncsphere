@@ -22,6 +22,7 @@ class ServerProvider extends ChangeNotifier {
   final int _port = 8384;
   int _connectedClients = 0;
   String _syncDir = '';
+  String? _lastError;
 
   bool get isRunning => _isRunning;
   String? get serverUrl => _serverUrl;
@@ -29,6 +30,7 @@ class ServerProvider extends ChangeNotifier {
   int get port => _port;
   int get connectedClients => _connectedClients;
   String get syncDir => _syncDir;
+  String? get lastError => _lastError;
   set syncDir(String value) {
     if (_syncDir != value) {
       _syncDir = value;
@@ -43,6 +45,12 @@ class ServerProvider extends ChangeNotifier {
   Future<void> startServer(String syncDir) async {
     if (_isRunning) {
       return;
+    }
+
+    final bool hadError = _lastError != null;
+    _lastError = null;
+    if (hadError) {
+      notifyListeners();
     }
 
     try {
@@ -83,12 +91,26 @@ class ServerProvider extends ChangeNotifier {
         _serverUrl = 'http://$_ipAddress:$_port';
       }
       notifyListeners();
-    } on Exception {
+    } on Exception catch (error) {
       _isRunning = false;
       _serverUrl = null;
+      _ipAddress = null;
+      _connectedClients = 0;
       _server = null;
+
+      final String errorText = error.toString();
+      final String normalizedErrorText = errorText.toLowerCase();
+      final bool isPortInUse =
+          (error is SocketException && error.osError?.errorCode == 98) ||
+          normalizedErrorText.contains('address already in use');
+
+      if (isPortInUse) {
+        _lastError = 'ポート$_portは使用中です';
+      } else {
+        _lastError = errorText;
+      }
+
       notifyListeners();
-      rethrow;
     }
   }
 
@@ -113,6 +135,14 @@ class ServerProvider extends ChangeNotifier {
     } else {
       await startServer(syncDir);
     }
+  }
+
+  void clearError() {
+    if (_lastError == null) {
+      return;
+    }
+    _lastError = null;
+    notifyListeners();
   }
 
   Future<String> _getDefaultSyncDir() async {

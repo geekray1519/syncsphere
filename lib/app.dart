@@ -53,7 +53,9 @@ class SyncSphereApp extends StatelessWidget {
       locale: settings.locale,
       supportedLocales: supportedLocales,
       localizationsDelegates: localizationsDelegates,
-      initialRoute: AppRoutes.home,
+      initialRoute: settings.hasSeenOnboarding
+          ? AppRoutes.home
+          : AppRoutes.onboarding,
       onGenerateRoute: _onGenerateRoute,
     );
   }

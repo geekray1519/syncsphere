@@ -54,6 +54,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
   String get save => 'Save';
 
   @override
@@ -465,6 +471,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorConnectionLost => 'Connection lost';
+
+  @override
+  String get serverStartError => 'Server start error';
+
+  @override
+  String get syncErrorTitle => 'Sync error';
+
+  @override
+  String get cancelSyncConfirmTitle => 'Cancel sync?';
+
+  @override
+  String get cancelSyncConfirmMessage => 'This will stop the current sync.';
+
+  @override
+  String get jobNameRequired => 'Job name is required';
+
+  @override
+  String get folderPickerError => 'Could not select folder';
+
+  @override
+  String get exitWizardTitle => 'Exit wizard?';
+
+  @override
+  String get exitWizardMessage => 'Your input will be lost';
+
+  @override
+  String get exitButton => 'Exit';
+
+  @override
+  String get stayButton => 'Stay';
 
   @override
   String get conflictTitle => 'File Conflict';

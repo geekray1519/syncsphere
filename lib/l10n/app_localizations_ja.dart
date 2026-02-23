@@ -54,6 +54,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cancel => 'キャンセル';
 
   @override
+  String get cancelButton => '中止';
+
+  @override
+  String get continueButton => '続行';
+
+  @override
   String get save => '保存';
 
   @override
@@ -458,6 +464,36 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get errorConnectionLost => '接続が切断されました';
+
+  @override
+  String get serverStartError => 'サーバー起動エラー';
+
+  @override
+  String get syncErrorTitle => '同期エラー';
+
+  @override
+  String get cancelSyncConfirmTitle => '同期を中止しますか？';
+
+  @override
+  String get cancelSyncConfirmMessage => '進行中の同期は停止します。';
+
+  @override
+  String get jobNameRequired => 'ジョブ名は必須です';
+
+  @override
+  String get folderPickerError => 'フォルダを選択できませんでした';
+
+  @override
+  String get exitWizardTitle => 'ウィザードを終了しますか？';
+
+  @override
+  String get exitWizardMessage => '入力内容は失われます';
+
+  @override
+  String get exitButton => '終了';
+
+  @override
+  String get stayButton => '続ける';
 
   @override
   String get conflictTitle => 'ファイルの競合';

@@ -26,8 +26,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
   String _sourcePath = '';
   String _targetPath = '';
   ConnectionType _connectionType = ConnectionType.local;
-
-  final _formKey = GlobalKey<FormState>();
+  String? _jobNameErrorText;
 
   @override
   Widget build(BuildContext context) {
@@ -61,100 +60,117 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
       ),
     ];
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      appBar: AppBar(
-        title: Text(l10n.setupWizardTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
-      body: Theme(
-        data: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(
-            primary: theme.colorScheme.primary,
-            onSurface: theme.colorScheme.onSurface,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (didPop) {
+          return;
+        }
+        _handleBackNavigation();
+      },
+      child: Scaffold(
+        backgroundColor: theme.colorScheme.surface,
+        appBar: AppBar(
+          title: Text(
+            l10n.setupWizardTitle,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+          centerTitle: true,
         ),
-        child: Stepper(
-          type: MediaQuery.of(context).size.width > 600 ? StepperType.horizontal : StepperType.vertical,
-          currentStep: _currentStep,
-          onStepContinue: () {
-            if (_currentStep == 1) {
-              if (!_formKey.currentState!.validate() || _sourcePath.isEmpty || _targetPath.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(l10n.errorGeneral),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                );
+        body: Theme(
+          data: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
+              primary: theme.colorScheme.primary,
+              onSurface: theme.colorScheme.onSurface,
+            ),
+          ),
+          child: Stepper(
+            type: MediaQuery.of(context).size.width > 600
+                ? StepperType.horizontal
+                : StepperType.vertical,
+            currentStep: _currentStep,
+            onStepContinue: () {
+              if (_currentStep == 0 && _jobName.trim().isEmpty) {
+                setState(() {
+                  _jobNameErrorText = l10n.jobNameRequired;
+                });
                 return;
               }
-            }
 
-            if (_currentStep < steps.length - 1) {
-              setState(() => _currentStep += 1);
-            } else {
-              _saveJob();
-            }
-          },
-          onStepCancel: () {
-            if (_currentStep > 0) {
-              setState(() => _currentStep -= 1);
-            } else {
-              Navigator.pop(context);
-            }
-          },
-          controlsBuilder: (context, details) {
-            final isLastStep = _currentStep == steps.length - 1;
-            return Padding(
-              padding: const EdgeInsets.only(
-                top: AppSpacing.xxl,
-                bottom: AppSpacing.xxl,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: details.onStepContinue,
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.all(AppSpacing.lg),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                        ),
-                      ),
-                      child: Text(
-                        isLastStep ? l10n.createNewJob : l10n.next,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  const Gap(AppSpacing.lg),
-                  if (_currentStep > 0)
+              if (_currentStep == 1 &&
+                  (_sourcePath.isEmpty || _targetPath.isEmpty)) {
+                _showWizardErrorSnackBar(l10n.errorGeneral);
+                return;
+              }
+
+              if (_currentStep < steps.length - 1) {
+                setState(() => _currentStep += 1);
+              } else {
+                _saveJob();
+              }
+            },
+            onStepCancel: _handleBackNavigation,
+            controlsBuilder: (context, details) {
+              final isLastStep = _currentStep == steps.length - 1;
+              return Padding(
+                padding: const EdgeInsets.only(
+                  top: AppSpacing.xxl,
+                  bottom: AppSpacing.xxl,
+                ),
+                child: Row(
+                  children: [
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: details.onStepCancel,
-                        style: OutlinedButton.styleFrom(
+                      child: FilledButton(
+                        onPressed: details.onStepContinue,
+                        style: FilledButton.styleFrom(
                           padding: const EdgeInsets.all(AppSpacing.lg),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusLg,
+                            ),
                           ),
                         ),
-                        child: Text(l10n.back, style: const TextStyle(fontSize: 16)),
+                        child: Text(
+                          isLastStep ? l10n.createNewJob : l10n.next,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
-                ],
-              ),
-            );
-          },
-          steps: steps,
+                    const Gap(AppSpacing.lg),
+                    if (_currentStep > 0)
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: details.onStepCancel,
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.all(AppSpacing.lg),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusLg,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            l10n.back,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+            steps: steps,
+          ),
         ),
       ),
     );
   }
 
   Widget _buildModeStep() {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     return Column(
@@ -166,9 +182,31 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: l10n.jobName,
+                  hintText: l10n.jobNameHint,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  ),
+                  prefixIcon: const Icon(Icons.label_outline_rounded),
+                  filled: true,
+                  errorText: _jobNameErrorText,
+                ),
+                initialValue: _jobName,
+                onChanged: (String value) {
+                  setState(() {
+                    _jobName = value;
+                    if (_jobNameErrorText != null && value.trim().isNotEmpty) {
+                      _jobNameErrorText = null;
+                    }
+                  });
+                },
+              ),
+              const Gap(AppSpacing.xl),
               Text(
                 l10n.syncModeTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -188,70 +226,53 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildStepCard(
-            icon: Icons.folder_copy_rounded,
-            title: l10n.setupWizardStep2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.setupWizardStep2,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildStepCard(
+          icon: Icons.folder_copy_rounded,
+          title: l10n.setupWizardStep2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.setupWizardStep2,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Gap(AppSpacing.xl),
+              _buildFolderSelector(
+                label: l10n.sourceFolder,
+                icon: Icons.folder_shared_rounded,
+                value: _sourcePath,
+                onPick: () => _pickFolder(isSource: true),
+              ),
+              const Gap(AppSpacing.lg),
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondaryContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.arrow_downward_rounded,
+                    color: theme.colorScheme.onSecondaryContainer,
                   ),
                 ),
-                const Gap(AppSpacing.xl),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: l10n.jobName,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                    ),
-                    prefixIcon: const Icon(Icons.label_outline_rounded),
-                    filled: true,
-                  ),
-                  initialValue: _jobName,
-                  onChanged: (val) => _jobName = val,
-                  validator: (val) => val == null || val.isEmpty ? l10n.errorGeneral : null,
-                ),
-                const Gap(AppSpacing.xl),
-                _buildFolderSelector(
-                  label: l10n.sourceFolder,
-                  icon: Icons.folder_shared_rounded,
-                  value: _sourcePath,
-                  onPick: () => _pickFolder(isSource: true),
-                ),
-                const Gap(AppSpacing.lg),
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.arrow_downward_rounded,
-                      color: theme.colorScheme.onSecondaryContainer,
-                    ),
-                  ),
-                ),
-                const Gap(AppSpacing.lg),
-                _buildFolderSelector(
-                  label: l10n.targetFolder,
-                  icon: Icons.create_new_folder_rounded,
-                  value: _targetPath,
-                  onPick: () => _pickFolder(isSource: false),
-                ),
-              ],
-            ),
+              ),
+              const Gap(AppSpacing.lg),
+              _buildFolderSelector(
+                label: l10n.targetFolder,
+                icon: Icons.create_new_folder_rounded,
+                value: _targetPath,
+                onPick: () => _pickFolder(isSource: false),
+              ),
+            ],
           ),
-        ].animate(interval: 50.ms).fadeIn().slideX(begin: 0.1),
-      ),
+        ),
+      ].animate(interval: 50.ms).fadeIn().slideX(begin: 0.1),
     );
   }
 
@@ -269,9 +290,9 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
             children: [
               Text(
                 l10n.connectionType,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const Gap(AppSpacing.xl),
               ConnectionTypeSelector(
@@ -315,17 +336,35 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _ReviewItem(label: l10n.jobName, value: _jobName.isEmpty ? '---' : _jobName),
+                      _ReviewItem(
+                        label: l10n.jobName,
+                        value: _jobName.isEmpty ? '---' : _jobName,
+                      ),
                       const Divider(height: AppSpacing.xxl),
-                      _ReviewItem(label: l10n.syncModeTitle, value: _syncMode.name),
+                      _ReviewItem(
+                        label: l10n.syncModeTitle,
+                        value: _syncMode.name,
+                      ),
                       const Divider(height: AppSpacing.xxl),
-                      _ReviewItem(label: l10n.connectionType, value: _connectionType.name),
+                      _ReviewItem(
+                        label: l10n.connectionType,
+                        value: _connectionType.name,
+                      ),
                       const Divider(height: AppSpacing.xxl),
-                      _ReviewItem(label: l10n.sourceFolder, value: _sourcePath.isEmpty ? '---' : _sourcePath),
+                      _ReviewItem(
+                        label: l10n.sourceFolder,
+                        value: _sourcePath.isEmpty ? '---' : _sourcePath,
+                      ),
                       const Gap(AppSpacing.sm),
-                      const Icon(Icons.arrow_downward_rounded, size: AppSpacing.iconSm),
+                      const Icon(
+                        Icons.arrow_downward_rounded,
+                        size: AppSpacing.iconSm,
+                      ),
                       const Gap(AppSpacing.sm),
-                      _ReviewItem(label: l10n.targetFolder, value: _targetPath.isEmpty ? '---' : _targetPath),
+                      _ReviewItem(
+                        label: l10n.targetFolder,
+                        value: _targetPath.isEmpty ? '---' : _targetPath,
+                      ),
                     ],
                   ),
                 ),
@@ -338,18 +377,84 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
   }
 
   Future<void> _pickFolder({required bool isSource}) async {
-    final String? selectedPath = await FilePicker.platform.getDirectoryPath();
-    if (selectedPath == null || selectedPath.isEmpty || !mounted) {
+    final l10n = AppLocalizations.of(context)!;
+
+    try {
+      final String? selectedPath = await FilePicker.platform.getDirectoryPath();
+      if (!mounted) {
+        return;
+      }
+      if (selectedPath == null || selectedPath.isEmpty) {
+        _showWizardErrorSnackBar(l10n.folderPickerError);
+        return;
+      }
+
+      setState(() {
+        if (isSource) {
+          _sourcePath = selectedPath;
+        } else {
+          _targetPath = selectedPath;
+        }
+      });
+    } on PlatformException {
+      if (!mounted) {
+        return;
+      }
+      _showWizardErrorSnackBar(l10n.folderPickerError);
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      _showWizardErrorSnackBar(l10n.folderPickerError);
+    }
+  }
+
+  void _showWizardErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+
+  void _handleBackNavigation() async {
+    if (_currentStep > 0) {
+      setState(() => _currentStep -= 1);
       return;
     }
 
-    setState(() {
-      if (isSource) {
-        _sourcePath = selectedPath;
-      } else {
-        _targetPath = selectedPath;
-      }
-    });
+    final bool shouldExit = await _confirmExitWizard();
+    if (shouldExit && mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<bool> _confirmExitWizard() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final bool? shouldExit = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(l10n.exitWizardTitle),
+          content: Text(l10n.exitWizardMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.stayButton),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(l10n.exitButton),
+            ),
+          ],
+        );
+      },
+    );
+
+    return shouldExit ?? false;
   }
 
   Widget _buildFolderSelector({
@@ -487,9 +592,10 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
 
   void _saveJob() {
     HapticFeedback.mediumImpact();
+    final String trimmedJobName = _jobName.trim();
     final job = SyncJob(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _jobName.isEmpty ? 'New Sync Job' : _jobName,
+      name: trimmedJobName.isEmpty ? 'New Sync Job' : trimmedJobName,
       sourcePath: _sourcePath,
       targetPath: _targetPath,
       syncMode: _syncMode,

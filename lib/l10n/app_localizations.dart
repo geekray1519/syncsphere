@@ -188,6 +188,18 @@ abstract class AppLocalizations {
   /// **'キャンセル'**
   String get cancel;
 
+  /// No description provided for @cancelButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'中止'**
+  String get cancelButton;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'続行'**
+  String get continueButton;
+
   /// No description provided for @save.
   ///
   /// In ja, this message translates to:
@@ -997,6 +1009,66 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'接続が切断されました'**
   String get errorConnectionLost;
+
+  /// No description provided for @serverStartError.
+  ///
+  /// In ja, this message translates to:
+  /// **'サーバー起動エラー'**
+  String get serverStartError;
+
+  /// No description provided for @syncErrorTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期エラー'**
+  String get syncErrorTitle;
+
+  /// No description provided for @cancelSyncConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期を中止しますか？'**
+  String get cancelSyncConfirmTitle;
+
+  /// No description provided for @cancelSyncConfirmMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'進行中の同期は停止します。'**
+  String get cancelSyncConfirmMessage;
+
+  /// No description provided for @jobNameRequired.
+  ///
+  /// In ja, this message translates to:
+  /// **'ジョブ名は必須です'**
+  String get jobNameRequired;
+
+  /// No description provided for @folderPickerError.
+  ///
+  /// In ja, this message translates to:
+  /// **'フォルダを選択できませんでした'**
+  String get folderPickerError;
+
+  /// No description provided for @exitWizardTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ウィザードを終了しますか？'**
+  String get exitWizardTitle;
+
+  /// No description provided for @exitWizardMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'入力内容は失われます'**
+  String get exitWizardMessage;
+
+  /// No description provided for @exitButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'終了'**
+  String get exitButton;
+
+  /// No description provided for @stayButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'続ける'**
+  String get stayButton;
 
   /// No description provided for @conflictTitle.
   ///
