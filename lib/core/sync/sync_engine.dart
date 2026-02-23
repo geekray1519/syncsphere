@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:syncsphere/core/sync/conflict_resolver.dart';
 import 'package:syncsphere/core/sync/file_comparator.dart';
@@ -123,7 +124,8 @@ class SyncEngine {
           counters.conflicts += applied.conflicts;
           counters.errors += applied.errors;
           counters.totalBytes += applied.totalBytes;
-        } catch (_) {
+        } catch (error) {
+          debugPrint('[SyncEngine] File operation failed: $error');
           counters.errors++;
           counters.filesSkipped++;
         }
@@ -139,7 +141,8 @@ class SyncEngine {
           ),
         );
       }
-    } catch (_) {
+    } catch (error) {
+      debugPrint('[SyncEngine] Sync run error: $error');
       counters.errors++;
     }
 
@@ -359,7 +362,8 @@ class SyncEngine {
       }
       await tempFile.rename(destinationFile.path);
       return _CopyResult(success: true, bytes: sourceLength);
-    } catch (_) {
+    } catch (error) {
+      debugPrint('[SyncEngine] File copy failed: $error');
       if (await tempFile.exists()) {
         await tempFile.delete();
       }

@@ -102,8 +102,11 @@
   "pauseSync": "Pause Sync",
   "resumeSync": "Resume Sync",
   "syncing": "Syncing...",
+  "syncingStatus": "Syncing...",
   "syncComplete": "Sync Complete",
+  "syncCompletedStatus": "Sync completed",
   "syncFailed": "Sync Failed",
+  "syncErrorStatus": "Sync error",
   "syncProgress": "Sync Progress",
   "syncStats": "Sync Statistics",
   
@@ -169,6 +172,7 @@
   "errorFileInUse": "File is in use",
   "errorConnectionLost": "Connection lost",
   "serverStartError": "Server start error",
+  "serverCrashed": "Server stopped unexpectedly",
   "syncErrorTitle": "Sync error",
   "cancelSyncConfirmTitle": "Cancel sync?",
   "cancelSyncConfirmMessage": "This will stop the current sync.",
@@ -205,7 +209,25 @@
   "jobName": "Job Name",
   "jobNameHint": "e.g., Photo Backup, Document Sync",
   "lastSync": "Last Sync",
+  "lastSyncPrefix": "Last sync",
   "neverSynced": "Never synced",
+  "minutesAgo": "{count} min ago",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{count} hours ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "justNow": "Just now",
   
   "helpTitle": "Help",
   "helpSetup": "How to Set Up Connections",
@@ -330,6 +352,7 @@
   "sourceCode": "Source Code",
   "privacyPolicy": "Privacy Policy",
   "copyUrl": "Copy URL",
+  "shareUrl": "Share URL",
   "urlCopied": "URL copied to clipboard",
   "activeSyncs": "Active Syncs",
   "recentSync": "Recent Syncs",

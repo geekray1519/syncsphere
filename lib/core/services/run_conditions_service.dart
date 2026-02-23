@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:syncsphere/models/run_conditions.dart';
@@ -25,7 +26,8 @@ class RunConditionsService {
         }
       }
       return false;
-    } catch (_) {
+    } catch (error) {
+      debugPrint('[RunConditionsService] Platform channel error: $error');
       return false;
     }
   }

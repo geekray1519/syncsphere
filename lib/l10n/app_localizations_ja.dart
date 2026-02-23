@@ -286,10 +286,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get syncing => '同期中...';
 
   @override
+  String get syncingStatus => '同期中...';
+
+  @override
   String get syncComplete => '同期が完了しました';
 
   @override
+  String get syncCompletedStatus => '同期完了';
+
+  @override
   String get syncFailed => '同期に失敗しました';
+
+  @override
+  String get syncErrorStatus => '同期エラー';
 
   @override
   String get syncProgress => '同期の進捗';
@@ -469,6 +478,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get serverStartError => 'サーバー起動エラー';
 
   @override
+  String get serverCrashed => 'サーバーが予期せず停止しました';
+
+  @override
   String get syncErrorTitle => '同期エラー';
 
   @override
@@ -566,7 +578,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get lastSync => '最終同期';
 
   @override
+  String get lastSyncPrefix => '最終同期';
+
+  @override
   String get neverSynced => '未同期';
+
+  @override
+  String minutesAgo(int count) {
+    return '$count分前';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return '$count時間前';
+  }
+
+  @override
+  String get justNow => 'たった今';
 
   @override
   String get helpTitle => 'ヘルプ';
@@ -914,6 +942,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get copyUrl => 'URLをコピー';
+
+  @override
+  String get shareUrl => 'URLを共有';
 
   @override
   String get urlCopied => 'URLがクリップボードにコピーされました';

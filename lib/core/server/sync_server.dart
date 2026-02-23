@@ -23,8 +23,11 @@ class SyncServer {
   final Set<WebSocket> _clients = <WebSocket>{};
 
   HttpServer? _server;
+  Completer<void>? _serverDoneCompleter;
 
   bool get isRunning => _server != null;
+  HttpServer? get httpServer => _server;
+  Future<void>? get done => _serverDoneCompleter?.future;
 
   int get connectedClients => _clients.length;
 
@@ -44,10 +47,22 @@ class SyncServer {
     );
 
     _server = server;
+    _serverDoneCompleter = Completer<void>();
+
     server.listen(
       _handleRequest,
       onError: (Object error, StackTrace stackTrace) {
         stderr.writeln('SyncServer request error: $error');
+      },
+      onDone: () {
+        if (identical(_server, server)) {
+          _server = null;
+        }
+        _clients.clear();
+        onClientCountChanged?.call(0);
+        if (!(_serverDoneCompleter?.isCompleted ?? true)) {
+          _serverDoneCompleter?.complete();
+        }
       },
       cancelOnError: false,
     );
@@ -75,6 +90,9 @@ class SyncServer {
     }
 
     await server.close(force: true);
+    if (!(_serverDoneCompleter?.isCompleted ?? true)) {
+      _serverDoneCompleter?.complete();
+    }
   }
 
   Future<String> getLocalIpAddress() async {

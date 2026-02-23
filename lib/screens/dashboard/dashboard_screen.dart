@@ -5,6 +5,7 @@ import 'package:syncsphere/models/sync_job.dart';
 import 'package:syncsphere/providers/device_provider.dart';
 import 'package:syncsphere/providers/sync_provider.dart';
 import 'package:syncsphere/theme/app_spacing.dart';
+import 'package:syncsphere/theme/app_theme.dart';
 import 'package:syncsphere/widgets/ad_banner_widget.dart';
 import 'package:syncsphere/widgets/empty_state_widget.dart';
 import 'package:syncsphere/widgets/sync_job_card.dart';
@@ -18,6 +19,142 @@ const bool _disableAnimationsForTest = bool.fromEnvironment('FLUTTER_TEST');
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
+  String _formatRelativeTime(DateTime? dateTime, AppLocalizations l10n) {
+    if (dateTime == null) {
+      return l10n.neverSynced;
+    }
+
+    final Duration difference = DateTime.now().difference(dateTime);
+    if (difference.inMinutes <= 0) {
+      return l10n.justNow;
+    }
+    if (difference.inHours < 1) {
+      return l10n.minutesAgo(difference.inMinutes);
+    }
+    return l10n.hoursAgo(difference.inHours);
+  }
+
+  Widget? _buildSyncStatusBanner(
+    BuildContext context,
+    SyncProvider syncProvider,
+    AppLocalizations l10n,
+  ) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    switch (syncProvider.syncState) {
+      case SyncState.running:
+        return Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          ),
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text(
+                  l10n.syncingStatus,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      case SyncState.error:
+        final String message = syncProvider.lastSyncError?.trim() ?? '';
+        final String displayMessage = message.isEmpty
+            ? l10n.syncErrorStatus
+            : '${l10n.syncErrorStatus}: $message';
+        return Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.errorContainer,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          ),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.error_outline_rounded,
+                color: colorScheme.onErrorContainer,
+                size: AppSpacing.iconSm,
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text(
+                  displayMessage,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onErrorContainer,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      case SyncState.completed:
+        return Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.success.withValues(alpha: 0.14),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          ),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.check_circle_outline_rounded,
+                color: colorScheme.success,
+                size: AppSpacing.iconSm,
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text(
+                  l10n.syncCompletedStatus,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: colorScheme.success,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              IconButton(
+                tooltip: l10n.close,
+                visualDensity: VisualDensity.compact,
+                onPressed: syncProvider.resetSyncState,
+                icon: const Icon(Icons.close_rounded),
+                color: colorScheme.success,
+              ),
+            ],
+          ),
+        );
+      case SyncState.idle:
+      case SyncState.paused:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -28,6 +165,11 @@ class DashboardScreen extends StatelessWidget {
     final int totalFolders = syncProvider.jobs.length;
     final int connectedDevices = deviceProvider.connectedDevices.length;
     final int activeSyncs = syncProvider.jobs.where((SyncJob job) => job.isActive).length;
+    final Widget? syncStatusBanner = _buildSyncStatusBanner(
+      context,
+      syncProvider,
+      l10n,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -86,6 +228,10 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ).animate(autoPlay: !_disableAnimationsForTest).fadeIn(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
+                  if (syncStatusBanner != null) ...<Widget>[
+                    const SizedBox(height: AppSpacing.xl),
+                    syncStatusBanner,
+                  ],
                   const SizedBox(height: AppSpacing.xl),
 
                   // Quick action buttons row
@@ -134,6 +280,8 @@ class DashboardScreen extends StatelessWidget {
                       final SyncJob job = entry.value;
                       return SyncJobCard(
                         job: job,
+                        lastSyncText:
+                            '${l10n.lastSyncPrefix}: ${_formatRelativeTime(job.lastSync, l10n)}',
                         onTap: () => Navigator.pushNamed(
                           context,
                           '/folder-detail',

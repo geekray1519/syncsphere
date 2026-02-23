@@ -96,8 +96,8 @@ class RunConditionsProvider extends ChangeNotifier {
         );
         return;
       }
-    } catch (_) {
-      // Fall through to defaults when malformed.
+    } catch (error) {
+      debugPrint('[RunConditions] Failed to check conditions: $error');
     }
 
     _conditions = RunConditions.defaults();

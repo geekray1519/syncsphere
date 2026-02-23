@@ -8,10 +8,12 @@ class SyncJobCard extends StatelessWidget {
     super.key,
     required this.job,
     required this.onTap,
+    this.lastSyncText,
   });
 
   final SyncJob job;
   final VoidCallback onTap;
+  final String? lastSyncText;
 
   IconData _getModeIcon(SyncMode mode) {
     switch (mode) {
@@ -30,9 +32,11 @@ class SyncJobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final String lastSyncText = job.lastSync != null
-        ? DateFormat('MM/dd HH:mm').format(job.lastSync!)
-        : '未同期';
+    final String displayLastSyncText =
+        lastSyncText ??
+        (job.lastSync != null
+            ? DateFormat('MM/dd HH:mm').format(job.lastSync!)
+            : '未同期');
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -107,7 +111,7 @@ class SyncJobCard extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.xs),
                       Text(
-                        lastSyncText,
+                        displayLastSyncText,
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),

@@ -81,8 +81,8 @@ class SyncthingManager extends ChangeNotifier {
     if (client != null) {
       try {
         await client.shutdown();
-      } catch (_) {
-        // Fallback to direct process termination.
+      } catch (error) {
+        debugPrint('[SyncthingManager] Operation failed: $error');
       }
     }
 

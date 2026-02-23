@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -12,6 +13,9 @@ import 'package:syncsphere/core/server/web_asset_extractor.dart';
 class ServerProvider extends ChangeNotifier {
   ServerProvider();
 
+  static const String serverCrashedMessageJa = 'サーバーが予期せず停止しました';
+  static const String serverCrashedMessageEn = 'Server stopped unexpectedly';
+
   final WebAssetExtractor _assetExtractor = WebAssetExtractor();
 
   SyncServer? _server;
@@ -23,6 +27,7 @@ class ServerProvider extends ChangeNotifier {
   int _connectedClients = 0;
   String _syncDir = '';
   String? _lastError;
+  bool _isRestarting = false;
 
   bool get isRunning => _isRunning;
   String? get serverUrl => _serverUrl;
@@ -90,9 +95,11 @@ class ServerProvider extends ChangeNotifier {
       if (_ipAddress != null) {
         _serverUrl = 'http://$_ipAddress:$_port';
       }
+      _monitorServerUnexpectedStop(_server!);
       notifyListeners();
     } on Exception catch (error) {
       _isRunning = false;
+      _isRestarting = false;
       _serverUrl = null;
       _ipAddress = null;
       _connectedClients = 0;
@@ -120,10 +127,15 @@ class ServerProvider extends ChangeNotifier {
       return;
     }
 
-    await _server?.stop();
-    _server = null;
     _isRunning = false;
+    _isRestarting = false;
+    final SyncServer? server = _server;
+    _server = null;
+
+    await server?.stop();
+
     _serverUrl = null;
+    _ipAddress = null;
     _connectedClients = 0;
     notifyListeners();
   }
@@ -164,8 +176,66 @@ class ServerProvider extends ChangeNotifier {
   @override
   void dispose() {
     if (_isRunning) {
+      _isRunning = false;
+      _isRestarting = false;
       _server?.stop();
     }
     super.dispose();
+  }
+
+  void _monitorServerUnexpectedStop(SyncServer server) {
+    final Future<void>? done = server.done;
+    if (done == null) {
+      return;
+    }
+
+    unawaited(
+      done.then((_) async {
+        if (!_isRunning || _isRestarting || !identical(_server, server)) {
+          return;
+        }
+        await _attemptAutoRestart(server);
+      }).catchError((Object _) async {
+        if (!_isRunning || _isRestarting || !identical(_server, server)) {
+          return;
+        }
+        await _attemptAutoRestart(server);
+      }),
+    );
+  }
+
+  Future<void> _attemptAutoRestart(SyncServer server) async {
+    if (!_isRunning || _isRestarting || !identical(_server, server)) {
+      return;
+    }
+
+    _isRestarting = true;
+    notifyListeners();
+
+    try {
+      await server.stop();
+      await server.start();
+
+      if (!identical(_server, server)) {
+        return;
+      }
+
+      _ipAddress = await server.getLocalIpAddress();
+      _serverUrl = _ipAddress == null ? null : 'http://$_ipAddress:$_port';
+      _connectedClients = server.connectedClients;
+      _lastError = null;
+      _isRunning = true;
+      _monitorServerUnexpectedStop(server);
+    } on Exception {
+      _lastError = serverCrashedMessageJa;
+      _isRunning = false;
+      _serverUrl = null;
+      _ipAddress = null;
+      _connectedClients = 0;
+      _server = null;
+    } finally {
+      _isRestarting = false;
+      notifyListeners();
+    }
   }
 }

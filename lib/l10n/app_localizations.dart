@@ -650,17 +650,35 @@ abstract class AppLocalizations {
   /// **'同期中...'**
   String get syncing;
 
+  /// No description provided for @syncingStatus.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期中...'**
+  String get syncingStatus;
+
   /// No description provided for @syncComplete.
   ///
   /// In ja, this message translates to:
   /// **'同期が完了しました'**
   String get syncComplete;
 
+  /// No description provided for @syncCompletedStatus.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期完了'**
+  String get syncCompletedStatus;
+
   /// No description provided for @syncFailed.
   ///
   /// In ja, this message translates to:
   /// **'同期に失敗しました'**
   String get syncFailed;
+
+  /// No description provided for @syncErrorStatus.
+  ///
+  /// In ja, this message translates to:
+  /// **'同期エラー'**
+  String get syncErrorStatus;
 
   /// No description provided for @syncProgress.
   ///
@@ -1016,6 +1034,12 @@ abstract class AppLocalizations {
   /// **'サーバー起動エラー'**
   String get serverStartError;
 
+  /// No description provided for @serverCrashed.
+  ///
+  /// In ja, this message translates to:
+  /// **'サーバーが予期せず停止しました'**
+  String get serverCrashed;
+
   /// No description provided for @syncErrorTitle.
   ///
   /// In ja, this message translates to:
@@ -1208,11 +1232,35 @@ abstract class AppLocalizations {
   /// **'最終同期'**
   String get lastSync;
 
+  /// No description provided for @lastSyncPrefix.
+  ///
+  /// In ja, this message translates to:
+  /// **'最終同期'**
+  String get lastSyncPrefix;
+
   /// No description provided for @neverSynced.
   ///
   /// In ja, this message translates to:
   /// **'未同期'**
   String get neverSynced;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count}分前'**
+  String minutesAgo(int count);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count}時間前'**
+  String hoursAgo(int count);
+
+  /// No description provided for @justNow.
+  ///
+  /// In ja, this message translates to:
+  /// **'たった今'**
+  String get justNow;
 
   /// No description provided for @helpTitle.
   ///
@@ -1903,6 +1951,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'URLをコピー'**
   String get copyUrl;
+
+  /// No description provided for @shareUrl.
+  ///
+  /// In ja, this message translates to:
+  /// **'URLを共有'**
+  String get shareUrl;
 
   /// No description provided for @urlCopied.
   ///

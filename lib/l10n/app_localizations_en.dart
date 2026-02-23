@@ -292,10 +292,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncing => 'Syncing...';
 
   @override
+  String get syncingStatus => 'Syncing...';
+
+  @override
   String get syncComplete => 'Sync Complete';
 
   @override
+  String get syncCompletedStatus => 'Sync completed';
+
+  @override
   String get syncFailed => 'Sync Failed';
+
+  @override
+  String get syncErrorStatus => 'Sync error';
 
   @override
   String get syncProgress => 'Sync Progress';
@@ -476,6 +485,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get serverStartError => 'Server start error';
 
   @override
+  String get serverCrashed => 'Server stopped unexpectedly';
+
+  @override
   String get syncErrorTitle => 'Sync error';
 
   @override
@@ -577,7 +589,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastSync => 'Last Sync';
 
   @override
+  String get lastSyncPrefix => 'Last sync';
+
+  @override
   String get neverSynced => 'Never synced';
+
+  @override
+  String minutesAgo(int count) {
+    return '$count min ago';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return '$count hours ago';
+  }
+
+  @override
+  String get justNow => 'Just now';
 
   @override
   String get helpTitle => 'Help';
@@ -927,6 +955,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copyUrl => 'Copy URL';
+
+  @override
+  String get shareUrl => 'Share URL';
 
   @override
   String get urlCopied => 'URL copied to clipboard';

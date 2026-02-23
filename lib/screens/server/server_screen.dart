@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../providers/server_provider.dart';
@@ -209,6 +210,12 @@ class _ServerScreenState extends State<ServerScreen>
     ThemeData theme,
     AppLocalizations l10n,
   ) {
+    final String localizedMessage =
+        message == ServerProvider.serverCrashedMessageJa ||
+            message == ServerProvider.serverCrashedMessageEn
+        ? l10n.serverCrashed
+        : message;
+
     return Card(
       color: colorScheme.errorContainer,
       shape: RoundedRectangleBorder(
@@ -243,7 +250,7 @@ class _ServerScreenState extends State<ServerScreen>
               ],
             ),
             Text(
-              message,
+              localizedMessage,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onErrorContainer,
               ),
@@ -341,6 +348,17 @@ class _ServerScreenState extends State<ServerScreen>
                         );
                       },
                       icon: const Icon(Icons.copy_rounded),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    IconButton.filledTonal(
+                      tooltip: l10n.shareUrl,
+                      onPressed: () {
+                        HapticFeedback.lightImpact();
+                        SharePlus.instance.share(
+                          ShareParams(text: url, subject: 'SyncSphere'),
+                        );
+                      },
+                      icon: const Icon(Icons.share_rounded),
                     ),
                   ],
                 ),
